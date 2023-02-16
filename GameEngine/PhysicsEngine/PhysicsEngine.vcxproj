@@ -185,6 +185,7 @@
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="SoftBody.cpp" />
+    <ClCompile Include="SphereShape.cpp" />
     <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>

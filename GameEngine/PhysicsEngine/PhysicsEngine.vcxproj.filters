@@ -96,10 +96,10 @@
     <ClInclude Include="ShapeType.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="SphereShape.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="PlaneShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -150,6 +150,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlaneShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
