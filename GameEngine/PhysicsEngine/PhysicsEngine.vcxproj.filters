@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{8b6fa37a-1e16-4f03-ab4c-876568dd182e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cParticle.h">
@@ -48,7 +51,55 @@
     <ClInclude Include="PhysicsUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Time.h">
+    <ClInclude Include="CollisionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsWorld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="iPhysicsFactory.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iPhysicsWorld.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iRigidBody.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iShape.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iSoftBody.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyDesc.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iCollisionBody.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="BodyType.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftBodyDesc.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeType.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereShape.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -81,6 +132,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

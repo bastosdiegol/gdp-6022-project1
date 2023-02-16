@@ -3,6 +3,9 @@
 #include "cEnemyTypeA.h"
 #include "cEnemyTypeB.h"
 #include "cEnemyTypeC.h"
+#include <PhysicsFactory.h>
+#include <iPhysicsFactory.h>
+#include <PhysicsWorld.h>
 
 #ifdef _DEBUG
 #define DEBUG_LOG_ENABLED
@@ -21,6 +24,9 @@ extern glm::vec3* g_cameraTarget;
 extern cMeshObject* g_actor;
 extern glm::vec3 g_actorFacing;
 extern FModManager* g_FModManager;
+
+physics::iPhysicsFactory* physicsFactory;
+physics::iPhysicsWorld* world;
 
 void PhysicsProjOneStartingUp();
 void PhysicsProjOneNewGame();
@@ -49,6 +55,12 @@ void PhysicsProjOneGameLoop() {
 }
 
 void PhysicsProjOneStartingUp() {
+	// Initialize a Physics Factory
+	physicsFactory = new physics::PhysicsFactory();
+
+	// Create Physics World
+	world = physicsFactory->CreateWorld();
+
 	// Sets main actor
 	g_actor = g_ProjectManager->m_selectedScene->m_mMeshes.find("Triangle-Actor")->second;
 	// Adjust main actor facing direction
@@ -91,8 +103,10 @@ void PhysicsProjOneRunning() {
 void PhysicsProjOneShutdown() {
 	// Closing the Application
 	glfwSetWindowShouldClose(window, true);
-	// Deletes the enemies
+	// Deletes thigs
 	delete enemyA;
 	delete enemyB;
 	delete enemyC;
+	delete physicsFactory;
+	delete world;
 }

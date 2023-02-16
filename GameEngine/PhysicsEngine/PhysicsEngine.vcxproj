@@ -141,28 +141,50 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BodyType.h" />
     <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="CollisionHandler.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleSystem.h" />
+    <ClInclude Include="iCollisionBody.h" />
+    <ClInclude Include="iPhysicsFactory.h" />
+    <ClInclude Include="iPhysicsWorld.h" />
+    <ClInclude Include="iRigidBody.h" />
+    <ClInclude Include="iShape.h" />
+    <ClInclude Include="iSoftBody.h" />
+    <ClInclude Include="PhysicsFactory.h" />
     <ClInclude Include="PhysicsMath.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PhysicsUtils.h" />
+    <ClInclude Include="PhysicsWorld.h" />
+    <ClInclude Include="PlaneShape.h" />
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="RigidBodyDesc.h" />
     <ClInclude Include="Shapes.h" />
+    <ClInclude Include="ShapeType.h" />
+    <ClInclude Include="SoftBody.h" />
+    <ClInclude Include="SoftBodyDesc.h" />
+    <ClInclude Include="SphereShape.h" />
     <ClInclude Include="Spring.h" />
-    <ClInclude Include="Time.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CollisionHandler.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleSystem.cpp" />
+    <ClCompile Include="PhysicsFactory.cpp" />
     <ClCompile Include="PhysicsMath.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PhysicsUtils.cpp" />
+    <ClCompile Include="PhysicsWorld.cpp" />
+    <ClCompile Include="PlaneShape.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Shapes.cpp" />
+    <ClCompile Include="SoftBody.cpp" />
     <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
