@@ -1,0 +1,19 @@
+<soundlibrary>
+	<sound title="Fireball" path="./sounds/fx/Fire01.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+	<sound title="Firewall" path="./sounds/fx/Fire16.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="6000" position="0" />
+	<sound title="Summon Golem" path="./sounds/fx/Rock02.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="3000" position="0" />
+	<sound title="Rocksling" path="./sounds/fx/Rock10.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="2000" position="0" />
+	<sound title="Create Flask" path="./sounds/fx/Water03.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="3000" position="0" />
+	<sound title="Bublegun" path="./sounds/fx/Water04.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="3000" position="0" />
+	<sound title="Waterball" path="./sounds/fx/Water10.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="2000" position="0" />
+	<sound title="Neigh" path="./sounds/fx/Breath.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+	<sound title="Hit" path="./sounds/fx/Hit.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+	<sound title="Wing Flap" path="./sounds/fx/WingFlap.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+	<sound title="Game Win" path="./sounds/fx/game_win_success.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="3000" position="0" />
+	<sound title="New Game" path="./sounds/fx/board_newgame.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+	<sound title="Victory Melody" path="./sounds/fx/victory_melody.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="3000" position="0" />
+	<sound title="Draw Game" path="./sounds/fx/draw_beep.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+	<sound title="Load Game" path="./sounds/fx/load_game.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+	<sound title="Save Game" path="./sounds/fx/save_game.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+	<sound title="New Lang" path="./sounds/fx/new_lang.wav" format="wav" type="fx" frequency="1" volume="1" balance="0" lenght="1000" position="0" />
+</soundlibrary>

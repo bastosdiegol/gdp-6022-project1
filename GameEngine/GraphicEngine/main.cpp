@@ -90,11 +90,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	{
 
 	}
-	if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-		g_cameraTarget->z += MOVE_SPEED;
+	if (key == GLFW_KEY_UP /*&& action == GLFW_PRESS*/) {
+		g_cameraEye->z += MOVE_SPEED;
 	}
-	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-		g_cameraTarget->z -= MOVE_SPEED;
+	if (key == GLFW_KEY_DOWN /*&& action == GLFW_PRESS*/) {
+		g_cameraEye->z -= MOVE_SPEED;
 	}
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
 		g_cameraTarget->x += MOVE_SPEED;
@@ -248,11 +248,12 @@ int main(int argc, char* argv[]) {
 
 	// Sets initial volume for master channel to 20%
 	// WARNING: DO NOT PASS VOLUME VALUE ABOVE 1.0f
-	g_FModManager->setChannelGroupVolume("ch0 master", 1.0f);
-	g_FModManager->setChannelGroupVolume("ch1 music", 1.0f);
-	g_FModManager->setChannelGroupVolume("ch2 fx", 1.0f);
+	g_FModManager->setChannelGroupVolume("ch0 master", 0.2f);
+	g_FModManager->setChannelGroupVolume("ch1 music", 0.2f);
+	g_FModManager->setChannelGroupVolume("ch2 fx", 0.2f);
 
 	g_FModManager->loadDSPs();
+	g_FModManager->loadSoundsFromFile("sounds.xml");
 
 	// Creates pointer to SoundUI
 	SoundUI* soundUI = new SoundUI(g_FModManager);

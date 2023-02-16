@@ -20,6 +20,7 @@ extern glm::vec3* g_cameraEye;
 extern glm::vec3* g_cameraTarget;
 extern cMeshObject* g_actor;
 extern glm::vec3 g_actorFacing;
+extern FModManager* g_FModManager;
 
 void PhysicsProjOneStartingUp();
 void PhysicsProjOneNewGame();
@@ -82,6 +83,9 @@ void PhysicsProjOneRunning() {
 	enemyA->performBehaviour();
 	enemyB->performBehaviour();
 	enemyC->performBehaviour();
+
+	// FMOD SOUNDS !
+	//g_FModManager->playSound("Hit", "ch2 fx");
 }
 
 void PhysicsProjOneShutdown() {

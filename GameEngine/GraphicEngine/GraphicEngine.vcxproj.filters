@@ -267,5 +267,8 @@
     <Xml Include="graphicLibrary.xml">
       <Filter>Resource Files</Filter>
     </Xml>
+    <Xml Include="sounds.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
