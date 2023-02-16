@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<graphicsLibrary>
+	<scene title="1.Physics Proj#1" camEyeX="0" camEyeY="75" camEyeZ="-32" camTarX="32" camTarY="-5" camTarZ="32">
+		<model path="assets/physics_proj3/newPlane.ply" title="Plane">
+			<mesh id="Plane">
+				<position x="0" y="0" z="0" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="false" />
+				<color r="1" g="0" b="0" a="1" />
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="false" />
+				<visible value="true" />
+				<boundingBox value="false" />
+				<texture filename="TexturesCom_FloorsCheckerboard0027_17_seamless_S.bmp" />
+			</mesh>
+		</model>
+		<model path="assets/physics_proj3/newWall.ply" title="Wall1">
+			<mesh id="Wall1">
+				<position x="0" y="0" z="0" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="false" />
+				<color r="1" g="0" b="0" a="1" />
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="false" />
+				<visible value="true" />
+				<boundingBox value="false" />
+				<texture filename="colored-brick-wall-2.bmp" />
+			</mesh>
+		</model>
+		<model path="assets/physics_proj3/newWall2.ply" title="Wall2">
+			<mesh id="Wall2">
+				<position x="0" y="0" z="0" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="false" />
+				<color r="1" g="0" b="0" a="1" />
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="false" />
+				<visible value="true" />
+				<boundingBox value="false" />
+				<texture filename="colored-brick-wall-2.bmp" />
+			</mesh>
+		</model>
+		<model path="assets/physics_proj3/newWall3.ply" title="Wall3">
+			<mesh id="Wall3">
+				<position x="0" y="0" z="0" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="false" />
+				<color r="1" g="0" b="0" a="1" />
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="false" />
+				<visible value="true" />
+				<boundingBox value="false" />
+				<texture filename="colored-brick-wall-2.bmp" />
+			</mesh>
+		</model>
+		<model path="assets/physics_proj3/newWall4.ply" title="Wall4">
+			<mesh id="Wall4">
+				<position x="0" y="0" z="0" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="false" />
+				<color r="1" g="0" b="0" a="1" />
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="false" />
+				<visible value="true" />
+				<boundingBox value="false" />
+				<texture filename="colored-brick-wall-2.bmp" />
+			</mesh>
+		</model>
+		<model path="assets/triangle.ply" title="Triangle">
+			<mesh id="Triangle-Actor">
+				<position x="32" y="2" z="32" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="true" />
+				<color r="0.82745" g="0.82745" b="0.82745" a="1" />
+				<scale value="5" />
+				<isWireframe value="false" />
+				<doNotLight value="false" />
+				<visible value="true" />
+				<boundingBox value="false" />
+			</mesh>
+		</model>
+		<model path="assets/ISO_Shphere.ply" title="TargetBall">
+			<mesh id="Ball1">
+				<position x="5" y="2" z="5" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="true" />
+				<color r="1" g="0" b="0" a="1" />
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="true" />
+				<visible value="true" />
+				<boundingBox value="false" />
+			</mesh>
+			<mesh id="Ball2">
+				<position x="5" y="2" z="60" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="true" />
+				<color r="0" g="1" b="0" a="1" />
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="true" />
+				<visible value="true" />
+				<boundingBox value="false" />
+			</mesh>
+			<mesh id="Ball3">
+				<position x="60" y="2" z="5" />
+				<rotate x="0" y="0" z="0" />
+				<useColor value="true" />
+				<color r="0" g="0" b="1" a="1" />
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="true" />
+				<visible value="true" />
+				<boundingBox value="false" />
+			</mesh>
+		</model>
+		<light id="Light 01" onoff="1" showmodel="false">
+			<position x="-11.5" y="5.30000019" z="0" w="1" />
+			<diffuse x="0.5" y="0.5" z="0.5" w="1" />
+			<specular r="1" g="1" b="1" a="1" />
+			<attenuation x="1" y="1.5" z="9.99999975e-06" w="1" />
+			<direction x="0" y="-1" z="0" w="1" />
+			<param1 x="2" y="10" z="20" w="1" />
+			<param2 x="1" y="0" z="0" w="1" />
+		</light>
+	</scene>
+</graphicsLibrary>
