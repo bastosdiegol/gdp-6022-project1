@@ -499,6 +499,23 @@ bool cProjectManager::SaveSelectedScene() {
 	return true;
 }
 
+void cProjectManager::Step()
+{
+	std::map<std::string, cMeshObject*>::iterator itMeshes;
+	itMeshes = m_selectedScene->m_mMeshes.begin();
+	// Iterates through all meshes
+	for (itMeshes; itMeshes != m_selectedScene->m_mMeshes.end(); itMeshes++) {
+		cMeshObject* pCurrentMeshObject = itMeshes->second;
+
+		if (pCurrentMeshObject->physicsBody != nullptr) {
+			Vector3 newPositionVector;
+			pCurrentMeshObject->physicsBody->GetPosition(newPositionVector);
+			glm::vec3 newPosition = glm::vec3(newPositionVector.x, newPositionVector.y, newPositionVector.z);
+			pCurrentMeshObject->m_position = newPosition;
+		}
+	}
+}
+
 void cProjectManager::DrawObject(cMeshObject* pCurrentMeshObject, GLuint shaderID, GLint mModel_location, GLint mModelInverseTransform_location, glm::mat4x4 parentModel) {
 	
 	glm::mat4x4 matModel = parentModel;

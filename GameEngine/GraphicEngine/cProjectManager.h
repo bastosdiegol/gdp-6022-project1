@@ -60,6 +60,8 @@ public:
 	/// <returns>True if saving was successful</returns>
 	bool SaveSelectedScene();
 
+	void Step();
+
 	/// <summary>
 	/// Drawns an object on the Screen
 	/// </summary>

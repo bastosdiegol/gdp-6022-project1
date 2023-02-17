@@ -7,6 +7,7 @@
 
 #include "cModel.h"
 #include "iMovable.h"
+#include "RigidBody.h"
 
 class cMeshObject : public iMovable {
 public:
@@ -26,6 +27,8 @@ public:
 	bool			m_bDoNotLight;
 	bool			m_bIsVisible;
 	bool			m_displayBoundingBox;
+
+	physics::iRigidBody* physicsBody;
 
 	FMOD::Channel* attached_sound;
 

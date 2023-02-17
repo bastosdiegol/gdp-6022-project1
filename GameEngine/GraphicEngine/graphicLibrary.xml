@@ -86,7 +86,7 @@
 		</model>
 		<model path="assets/ISO_Shphere.ply" title="TargetBall">
 			<mesh id="Ball1">
-				<position x="5" y="2" z="5" />
+				<position x="10" y="2" z="10" />
 				<rotate x="0" y="0" z="0" />
 				<useColor value="true" />
 				<color r="1" g="0" b="0" a="1" />
