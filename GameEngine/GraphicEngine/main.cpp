@@ -59,27 +59,34 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	const float MOVE_SPEED = 0.5f;
 	const float ANGLE_TURN = 2.0f;
 
+	glm::vec3 direction(0.f);
+	float force = 5.f;
+
 	if (key == GLFW_KEY_A /*&& action == GLFW_PRESS*/)     // Left
 	{
-		g_actor->m_rotation.y += glm::radians(ANGLE_TURN);
-		g_actorFacing.x = sin(g_actor->m_rotation.y);
-		g_actorFacing.z = cos(g_actor->m_rotation.y);
+		//g_actor->m_rotation.y += glm::radians(ANGLE_TURN);
+		//g_actorFacing.x = sin(g_actor->m_rotation.y);
+		//g_actorFacing.z = cos(g_actor->m_rotation.y);
+		direction.x += -1;
 	}
 	if (key == GLFW_KEY_D /*&& action == GLFW_PRESS*/)     // Right
 	{
-		g_actor->m_rotation.y -= glm::radians(ANGLE_TURN);
-		g_actorFacing.x = sin(g_actor->m_rotation.y);
-		g_actorFacing.z = cos(g_actor->m_rotation.y);
+		//g_actor->m_rotation.y -= glm::radians(ANGLE_TURN);
+		//g_actorFacing.x = sin(g_actor->m_rotation.y);
+		//g_actorFacing.z = cos(g_actor->m_rotation.y);
+		direction.x += 1;
 	}
 	if (key == GLFW_KEY_W /*&& action == GLFW_PRESS*/)     // Forward
 	{
-		g_actor->m_position.x += g_actorFacing.x * MOVE_SPEED;
-		g_actor->m_position.z += g_actorFacing.z * MOVE_SPEED;
+		//g_actor->m_position.x += g_actorFacing.x * MOVE_SPEED;
+		//g_actor->m_position.z += g_actorFacing.z * MOVE_SPEED;
+		direction.z += -1;
 	}
 	if (key == GLFW_KEY_S /*&& action == GLFW_PRESS*/)     // Backwards
 	{
-		g_actor->m_position.x -= g_actorFacing.x * MOVE_SPEED;
-		g_actor->m_position.z -= g_actorFacing.z * MOVE_SPEED;
+		//g_actor->m_position.x -= g_actorFacing.x * MOVE_SPEED;
+		//g_actor->m_position.z -= g_actorFacing.z * MOVE_SPEED;
+		direction.z += 1;
 	}
 	if (key == GLFW_KEY_Q /*&& action == GLFW_PRESS*/)     // Down
 	{
@@ -111,6 +118,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_ESCAPE) {
 		g_ProjectManager->m_GameLoopState = SHUTING_DOWN;
 	}
+
+	g_actor->physicsBody->ApplyForce(direction * force);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {

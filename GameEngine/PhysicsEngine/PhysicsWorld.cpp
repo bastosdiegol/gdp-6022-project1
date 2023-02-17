@@ -122,7 +122,7 @@ namespace physics
 		for (int i = 0; i < collisions.size(); i++)
 		{
 			CollidingBodies& collision  = collisions[i];
-			m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
+			//m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
 		}
 
 		// Step #2 : Verlet

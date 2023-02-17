@@ -63,10 +63,20 @@ void PhysicsProjOneStartingUp() {
 	world->SetGravity(Vector3(0.0f, -0.98f, 0.0f));
 
 	// Sets main actor
-	g_actor = g_ProjectManager->m_selectedScene->m_mMeshes.find("Triangle-Actor")->second;
+	g_actor = g_ProjectManager->m_selectedScene->m_mMeshes.find("Player")->second;
 	// Adjust main actor facing direction
 	g_actorFacing.x = sin(g_actor->m_rotation.y);
 	g_actorFacing.z = cos(g_actor->m_rotation.y);
+
+	physics::iShape* playerBallShape = new physics::SphereShape(2.0f);
+	physics::RigidBodyDesc PlayerDesc;
+	PlayerDesc.isStatic = false;
+	PlayerDesc.mass = 2.f;
+	PlayerDesc.position = g_actor->m_position;
+	PlayerDesc.linearVelocity = glm::vec3(0.f);
+	g_actor->physicsBody = physicsFactory->CreateRigidBody(PlayerDesc, playerBallShape);
+	world->AddBody(g_actor->physicsBody);
+
 
 	cMeshObject* newPhysicsBall1 = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball1")->second;
 	// Create a ball 
@@ -94,14 +104,16 @@ void PhysicsProjOneStartingUp() {
 	// Instantiate the Enemy Red Ball - Seeks and Flees
 	//enemyA = new cEnemyTypeA(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
 	// Gets the Second enemy Mesh
-	cMeshObject* pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball2")->second;
-	// Instantiate the Enemy Green Ball - Pursues and Evades
-	enemyB = new cEnemyTypeB(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
-	// Gets the First enemy Mesh
-	pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball3")->second;
-	// Instantiate the Blue Ball - Approaches
-	enemyC = new cEnemyTypeC(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
-	// Sets the game state to running
+	//cMeshObject* pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball2")->second;
+	//// Instantiate the Enemy Green Ball - Pursues and Evades
+	//enemyB = new cEnemyTypeB(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
+	//// Gets the First enemy Mesh
+	//pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball3")->second;
+	//// Instantiate the Blue Ball - Approaches
+	//enemyC = new cEnemyTypeC(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
+	//// Sets the game state to running
+
+
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
 }
 

@@ -71,13 +71,13 @@
 				<texture filename="colored-brick-wall-2.bmp" />
 			</mesh>
 		</model>
-		<model path="assets/triangle.ply" title="Triangle">
-			<mesh id="Triangle-Actor">
-				<position x="32" y="2" z="32" />
+		<model path="assets/ISO_Shphere.ply" title="Player">
+			<mesh id="Player">
+				<position x="32" y="10" z="32" />
 				<rotate x="0" y="0" z="0" />
 				<useColor value="true" />
 				<color r="0.82745" g="0.82745" b="0.82745" a="1" />
-				<scale value="5" />
+				<scale value="2" />
 				<isWireframe value="false" />
 				<doNotLight value="false" />
 				<visible value="true" />
