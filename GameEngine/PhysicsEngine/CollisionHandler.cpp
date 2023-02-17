@@ -341,8 +341,8 @@ namespace physics
 
 	bool CollisionHandler::CollideRigidRigid(float dt, RigidBody* rigidA, RigidBody* rigidB)
 	{
-		iShape* shapeB = rigidA->GetShape();
-		iShape* shapeA = rigidB->GetShape();
+		iShape* shapeA = rigidA->GetShape();
+		iShape* shapeB = rigidB->GetShape();
 
 		bool collision = false;
 

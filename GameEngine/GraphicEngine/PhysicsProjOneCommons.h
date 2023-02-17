@@ -70,22 +70,23 @@ void PhysicsProjOneStartingUp() {
 
 	cMeshObject* newPhysicsBall1 = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball1")->second;
 	// Create a ball 
+	physics::iShape* ballShape = new physics::SphereShape(1.0f);
 	physics::RigidBodyDesc ballDesc;
 	ballDesc.isStatic = false;
-	ballDesc.mass = 10.f;
+	ballDesc.mass = 1.f;
 	ballDesc.position = newPhysicsBall1->m_position;
-	ballDesc.angularVelocity = Vector3(10.f, 0.f, 0.f);
-
-	physics::iShape* ballShape = new physics::SphereShape(1.0f);
+	ballDesc.linearVelocity = glm::vec3(0.f);
 	
 	newPhysicsBall1->physicsBody = physicsFactory->CreateRigidBody(ballDesc, ballShape);
 	world->AddBody(newPhysicsBall1->physicsBody);
 
 	// Create a plane
+	physics::iShape* planeShape = new physics::PlaneShape(0.0f, glm::vec3(0.f, 1.f, 0.f));
 	physics::RigidBodyDesc planeDesc;
 	planeDesc.isStatic = true;
-	planeDesc.position = Vector3(0.0f);
-	physics::iShape* planeShape = new physics::PlaneShape(10.0f, Vector3(1.0f));
+	planeDesc.mass = 0;
+	planeDesc.position = glm::vec3(0.f);
+	planeDesc.linearVelocity = glm::vec3(0.f);
 	world->AddBody(physicsFactory->CreateRigidBody(planeDesc, planeShape));
 
 	// Gets the First enemy Mesh
