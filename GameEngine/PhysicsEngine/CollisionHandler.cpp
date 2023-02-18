@@ -78,6 +78,16 @@ namespace physics
 		return pt - t * planeNormal;
 	}
 
+	glm::vec3 closestPointToAABB(const glm::vec3& point, const glm::vec3 minBounds, const glm::vec3 maxBounds)
+	{
+		// Find the closest point to the AABB by clamping the point's coordinates
+		glm::vec3 closestPoint = point;
+		closestPoint.x = std::max(minBounds.x, std::min(point.x, maxBounds.x));
+		closestPoint.y = std::max(minBounds.y, std::min(point.y, maxBounds.y));
+		closestPoint.z = std::max(minBounds.z, std::min(point.z, maxBounds.z));
+		return closestPoint;
+	}
+
 	bool CollisionHandler::CollideSphereSphere(float dt, RigidBody* bodyA, SphereShape* sphereA,
 		RigidBody* bodyB, SphereShape* sphereB)
 	{
@@ -194,6 +204,112 @@ namespace physics
 		return collidedSphereAABB;
 
 	}
+
+	bool CollisionHandler::CollideSphereAABB2(float dt, RigidBody* sphere, SphereShape* sphereShape
+		, RigidBody* bodyAABB, AABBShape* shapeAABBShape)
+	{
+		Vector3 spherePosition;
+		sphere->GetPosition(spherePosition);
+
+		glm::vec3 aabbMin = glm::vec3(shapeAABBShape->Min[0], shapeAABBShape->Min[1], shapeAABBShape->Min[2]);
+		glm::vec3 aabbMax = glm::vec3(shapeAABBShape->Max[0], shapeAABBShape->Max[1], shapeAABBShape->Max[2]);
+		glm::vec3 aabbSphereClosestPoint = closestPointToAABB(spherePosition.GetGLM(), aabbMin, aabbMax);
+
+		glm::vec3 overlapVector = aabbSphereClosestPoint - sphere->m_Position.GetGLM();
+		float overlapLength = glm::length(overlapVector);
+		float linearVelocityLength = glm::length(sphere->m_LinearVelocity.GetGLM());
+		float angularVelocityLength = glm::length(sphere->m_AngularVelocity.GetGLM());
+
+		if (linearVelocityLength > 0.f || angularVelocityLength > 0.f)
+		{
+			float velocity = glm::length(sphere->m_LinearVelocity.GetGLM());
+			float fractDt = 0.f;
+			if (velocity != 0.0f)
+			{
+				fractDt = sphereShape->GetRadius() * ((sphereShape->GetRadius() / overlapLength) - 1.0f) / velocity;
+			}
+			float partialDt = (1.f - fractDt) * dt;
+
+			// Reverse the sphere out of the plane
+			sphere->VerletStep1(-partialDt);
+
+			// calculate the reflection (Bounce) off the plane
+			glm::vec3 prevVelocity = sphere->m_LinearVelocity.GetGLM();
+			glm::vec3 reflect = glm::reflect(sphere->m_LinearVelocity.GetGLM(), shapeAABBShape->GetNormal().GetGLM());
+			sphere->m_LinearVelocity = reflect;
+
+			// calculate impact info
+			glm::vec3 impactComponent = glm::proj(sphere->m_LinearVelocity.GetGLM(), shapeAABBShape->GetNormal().GetGLM());
+			glm::vec3 impactTangent = sphere->m_LinearVelocity.GetGLM() - impactComponent;
+
+
+			glm::vec3 relativePoint = glm::normalize(aabbSphereClosestPoint - sphere->m_Position.GetGLM()) * sphereShape->GetRadius();
+			float surfaceVelocity = sphereShape->GetRadius() * glm::length(sphere->m_AngularVelocity.GetGLM());
+			glm::vec3 rotationDirection = glm::normalize(glm::cross(relativePoint - sphere->m_Position.GetGLM(), sphere->m_AngularVelocity.GetGLM()));
+
+
+
+			// Detect if we are bouncing off the plane, or "moving" along it.
+			if (glm::dot(impactTangent, shapeAABBShape->GetNormal().GetGLM()) > 0.f)
+			{
+				sphere->ApplyImpulseAtPoint(-2.f * impactComponent * sphere->m_Mass, relativePoint);
+				//sphere->ApplyImpulseAtPoint( , relativePoint);
+			}
+			else
+			{
+				glm::vec3 impactForce = impactTangent * -1.f * sphere->m_Mass * bodyAABB->m_Friction;
+				sphere->ApplyForceAtPoint(impactForce, relativePoint);
+			}
+
+			if (glm::dot(sphere->m_LinearVelocity.GetGLM(), shapeAABBShape->GetNormal().GetGLM()) == 0.0f)
+			{
+				glm::vec3 force = surfaceVelocity * rotationDirection * sphere->m_Mass * bodyAABB->m_Friction;
+				sphere->ApplyForce(force);
+			}
+
+			sphere->UpdateAcceleration();
+
+			// Move the sphere into the new direction
+			sphere->VerletStep1(partialDt);
+
+			//if (glm::length(impactTangent) > 0.001f)
+			//{
+			//	sphere->m_Velocity += impactTangent * 0.1f;
+			//}
+
+			// Here we ensure we are on the right side of the plane
+			//closestPoint = ClosestPtPointPlane(sphere->m_Position.GetGLM(), planeShape->GetNormal().GetGLM(), planeShape->GetDotProduct());
+			closestPointToAABB(aabbSphereClosestPoint, aabbMin, aabbMax);
+			overlapVector = aabbSphereClosestPoint - sphere->m_Position.GetGLM();
+			overlapLength = glm::length(overlapVector);
+			if (overlapLength < sphereShape->GetRadius())
+			{
+				// we are still colliding!!!
+
+				sphere->m_Position += shapeAABBShape->GetNormal() * (sphereShape->GetRadius() - overlapLength);
+
+				float velocityDotNormal = glm::dot(sphere->m_LinearVelocity.GetGLM(), shapeAABBShape->GetNormal().GetGLM());
+
+				if (velocityDotNormal < 0.f)
+				{
+					sphere->m_LinearVelocity -= shapeAABBShape->GetNormal() * velocityDotNormal;
+				}
+			}
+			else
+			{
+				sphere->m_LinearVelocity *= sphere->m_Restitution;
+			}
+
+		}
+		else
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	
 
 
 	bool CollisionHandler::CollideSpherePlane(float dt, RigidBody* sphere, SphereShape* sphereShape,

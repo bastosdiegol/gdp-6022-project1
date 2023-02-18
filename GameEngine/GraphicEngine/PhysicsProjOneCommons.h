@@ -99,19 +99,28 @@ void PhysicsProjOneStartingUp() {
 		cMeshObject* theWall = g_ProjectManager->m_selectedScene->m_mMeshes.find("Wall" + std::to_string(i))->second;
 		// Define Wall Normal
 		Vector3 wallNormal;
+		Vector3 wallPosition;
 		switch (i) {
-			case 1 : wallNormal = glm::vec3(0.f, 0.f, 1.f); // South Wall
+			case 1 : 
+				wallNormal = glm::vec3(0.f, 0.f, 1.f); // South Wall
+				wallPosition = glm::vec3(0.f);
 				break;
-			case 2 : wallNormal = glm::vec3(1.f, 0.f, 0.f); // East Wall
+			case 2 : 
+				wallNormal = glm::vec3(1.f, 0.f, 0.f); // East Wall
+				wallPosition = glm::vec3(0.f);
 				break;
-			case 3 : wallNormal = glm::vec3(0.f, 0.f, -1.f); // North Wall TODO: Fix Not Working
+			case 3 : 
+				wallNormal = glm::vec3(0.f, 0.f, -1.f); // North Wall TODO: Fix Not Working
+				wallPosition = glm::vec3(0.f);
 				break;
-			case 4 : wallNormal = glm::vec3(-1.f, 0.f, 0.f); // West Wall TODO: Fix Not Working
+			case 4 : 
+				wallNormal = glm::vec3(-1.f, 0.f, 0.f); // West Wall TODO: Fix Not Working
+				wallPosition = glm::vec3(0.f);
 				break;
 		}
 		// Creates Shape and Description
 		physics::iShape* wallShape = new physics::PlaneShape(1.0f, wallNormal);
-		physics::RigidBodyDesc wallDesc = createRigidBodyDesc(true, 0.f, theWall->m_position, glm::vec3(1.f));
+		physics::RigidBodyDesc wallDesc = createRigidBodyDesc(true, 0.f, wallPosition, glm::vec3(0.f));
 		theWall->physicsBody = physicsFactory->CreateRigidBody(wallDesc, wallShape);
 		world->AddBody(theWall->physicsBody);
 	}
@@ -129,7 +138,6 @@ void PhysicsProjOneStartingUp() {
 	//// Instantiate the Blue Ball - Approaches
 	//enemyC = new cEnemyTypeC(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
 	//// Sets the game state to running
-
 
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
 }
@@ -185,7 +193,7 @@ void setMeshObjectAsStaticPhysObjectAABB(std::string name) {
 	float max[3] = { theMesh->m_parentModel->max_x,
 					 theMesh->m_parentModel->max_y,
 					 theMesh->m_parentModel->max_z };
-	physics::iShape* theAABBShape = new physics::AABBShape(min, max);
+	physics::iShape* theAABBShape = new physics::AABBShape(min, max, Vector3(0.f, 1.f, 0.f));
 
 	// Adds the AABB to the Physics World
 	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 0.f, theMesh->m_position, glm::vec3(0.f));
