@@ -174,6 +174,27 @@ namespace physics
 		return true;
 	}
 
+	bool CollisionHandler::CollideSphereAABB(float dt, RigidBody* sphere, SphereShape* sphereA
+													, RigidBody* bodyAABB, AABBShape* shapeAABBShape) 
+	{
+		Vector3 spherePosition;
+		sphere->GetPosition(spherePosition);
+		// Compute squared distance between sphere center and AABB
+		float sqDist = SqDistPointAABB(spherePosition, shapeAABBShape);
+
+		// Sphere and AABB intersect if the (squared) distance
+		// between them is less than the (squared) sphere radius
+		bool collidedSphereAABB = sqDist <= sphereA->GetRadius() * sphereA->GetRadius();
+
+		// TODO: Implement Verlet Collision Sphere AABB
+		if (collidedSphereAABB) {
+			sphere->m_Position = sphere->m_PreviousPosition;
+		}
+
+		return collidedSphereAABB;
+
+	}
+
 
 	bool CollisionHandler::CollideSpherePlane(float dt, RigidBody* sphere, SphereShape* sphereShape,
 		RigidBody* plane, PlaneShape* planeShape)
@@ -360,6 +381,10 @@ namespace physics
 			{
 				// CollideSphereBox(dt, bodyA, SphereShape::Cast(shapeA), bodyB, BoxShape::Cast(shapeB));
 			}
+			else if (shapeB->GetShapeType() == ShapeType::AABB)
+			{
+				collision = CollideSphereAABB(dt, rigidA, SphereShape::Cast(shapeA), rigidB, AABBShape::Cast(shapeB));
+			}
 			else
 			{
 				// We don't have this handled at the moment.
@@ -463,5 +488,34 @@ namespace physics
 			}
 		}
 		softBody->UpdateBoundaries();
+	}
+
+	// Distance From a Sphere to AABB
+	float CollisionHandler::SqDistPointAABB(Vector3 p, physics::AABBShape* b) {
+		float sqDist = 0.0f;
+
+		// x, y, z
+		// 0, 1, 2
+
+		//for (int i = 0; i < 3; i++) {
+		//	// For each axis count any excess distance outside box extents
+		//	float v = p[i];
+		//	if (v < b.Min[i]) sqDist += (b.Min[i] - v) * (b.Min[i] - v);
+		//	if (v > b.Max[i]) sqDist += (v - b.Max[i]) * (v - b.Max[i]);
+		//}
+		float v;
+		v = p.x;
+		if (v < b->Min[0]) sqDist += (b->Min[0] - v) * (b->Min[0] - v);
+		if (v > b->Max[0]) sqDist += (v - b->Max[0]) * (v - b->Max[0]);
+
+		v = p.y;
+		if (v < b->Min[1]) sqDist += (b->Min[1] - v) * (b->Min[1] - v);
+		if (v > b->Max[1]) sqDist += (v - b->Max[1]) * (v - b->Max[1]);
+
+		v = p.z;
+		if (v < b->Min[2]) sqDist += (b->Min[2] - v) * (b->Min[2] - v);
+		if (v > b->Max[2]) sqDist += (v - b->Max[2]) * (v - b->Max[2]);
+
+		return sqDist;
 	}
 }

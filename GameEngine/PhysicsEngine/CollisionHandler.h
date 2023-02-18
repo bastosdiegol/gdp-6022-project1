@@ -6,6 +6,7 @@
 #include "SoftBody.h"
 #include "SphereShape.h"
 #include "PlaneShape.h"
+#include "AABBShape.h"
 
 namespace physics
 {
@@ -24,10 +25,12 @@ namespace physics
 
 		// Helper functions
 		glm::vec3 ClosestPtPointPlane(const glm::vec3& pt, const glm::vec3& planeNormal, float planeDotProduct);
+		float SqDistPointAABB(Vector3 p, physics::AABBShape* b);
 
 		// Shape Collisions
 		bool CollideSphereSphere(float dt, RigidBody* bodyA, SphereShape* sphereA, RigidBody* bodyB, SphereShape* sphereB);
 		bool CollideSpherePlane(float dt, RigidBody* sphere, SphereShape* sphereShape, RigidBody* plane, PlaneShape* planeShape);
+		bool CollideSphereAABB(float dt, RigidBody* sphere, SphereShape* sphereA, RigidBody* bodyAABB, AABBShape* shapeAABBShape);
 
 		//bool CollideSphereBox(float dt, RigidBody* sphere, SphereShape* sphereShape,
 		//	RigidBody* plane, PlaneShape* planeShape);
