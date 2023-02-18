@@ -34,6 +34,7 @@ void PhysicsProjOneRunning();
 void PhysicsProjOneShutdown();
 
 physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 position, Vector3 linearVelocity);
+void setMeshObjectAsStaticPhysObjectAABB(std::string name);
 
 iEnemy* enemyA = nullptr;
 iEnemy* enemyB = nullptr;
@@ -83,10 +84,14 @@ void PhysicsProjOneStartingUp() {
 	newPhysicsBall1->physicsBody = physicsFactory->CreateRigidBody(ballDesc, ballShape);
 	world->AddBody(newPhysicsBall1->physicsBody);
 
+	// Create a AABB Plane
+	setMeshObjectAsStaticPhysObjectAABB("Plane");
+
 	// Create a plane
-	physics::iShape* planeShape = new physics::PlaneShape(0.0f, glm::vec3(0.f, 1.f, 0.f));
-	physics::RigidBodyDesc planeDesc = createRigidBodyDesc(true, 0.f, glm::vec3(0.f), glm::vec3(0.f));
-	world->AddBody(physicsFactory->CreateRigidBody(planeDesc, planeShape));
+	//physics::iShape* planeShape = new physics::PlaneShape(0.0f, glm::vec3(0.f, 1.f, 0.f));
+	//physics::RigidBodyDesc planeDesc = createRigidBodyDesc(true, 0.f, glm::vec3(0.f), glm::vec3(0.f));
+	//world->AddBody(physicsFactory->CreateRigidBody(planeDesc, planeShape));
+
 
 	// Create walls
 	for (int i = 1; i <= 4; i++) {
@@ -95,13 +100,13 @@ void PhysicsProjOneStartingUp() {
 		// Define Wall Normal
 		Vector3 wallNormal;
 		switch (i) {
-			case 1 : wallNormal = glm::vec3(0.f, 0.f, 1.f);
+			case 1 : wallNormal = glm::vec3(0.f, 0.f, 1.f); // South Wall
 				break;
-			case 2 : wallNormal = glm::vec3(1.f, 0.f, 0.f);
+			case 2 : wallNormal = glm::vec3(1.f, 0.f, 0.f); // East Wall
 				break;
-			case 3 : wallNormal = glm::vec3(0.f, 0.f, -1.f); // TODO: Fix Not Working
+			case 3 : wallNormal = glm::vec3(0.f, 0.f, -1.f); // North Wall TODO: Fix Not Working
 				break;
-			case 4 : wallNormal = glm::vec3(-1.f, 0.f, 0.f); // TODO: Fix Not Working
+			case 4 : wallNormal = glm::vec3(-1.f, 0.f, 0.f); // West Wall TODO: Fix Not Working
 				break;
 		}
 		// Creates Shape and Description
@@ -160,11 +165,29 @@ void PhysicsProjOneShutdown() {
 	delete world;
 }
 
-inline physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 position, Vector3 linearVelocity) {
+physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 position, Vector3 linearVelocity) {
 	physics::RigidBodyDesc desc;
 	desc.isStatic = isStatic;
 	desc.mass = mass;
 	desc.position = position;
 	desc.linearVelocity = linearVelocity;
 	return desc;
+}
+
+void setMeshObjectAsStaticPhysObjectAABB(std::string name) {
+	cMeshObject* theMesh;
+	// Links the MeshObject to the AABB PhysicsObject
+	theMesh = g_ProjectManager->m_selectedScene->m_mMeshes.find(name)->second;
+	// Creates the AABB structure for the mesh
+	float min[3] = { theMesh->m_parentModel->min_x,
+					 theMesh->m_parentModel->min_y,
+					 theMesh->m_parentModel->min_z };
+	float max[3] = { theMesh->m_parentModel->max_x,
+					 theMesh->m_parentModel->max_y,
+					 theMesh->m_parentModel->max_z };
+	physics::iShape* theAABBShape = new physics::AABBShape(min, max);
+
+	// Adds the AABB to the Physics World
+	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 0.f, theMesh->m_position, glm::vec3(0.f));
+	world->AddBody(physicsFactory->CreateRigidBody(AABBDesc, theAABBShape));
 }
