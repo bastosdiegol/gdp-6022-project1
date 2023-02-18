@@ -122,7 +122,15 @@ namespace physics
 		for (int i = 0; i < collisions.size(); i++)
 		{
 			CollidingBodies& collision  = collisions[i];
-			//m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
+			// Gets CollisionBody ShapeA
+			iShape* shapeA = RigidBody::Cast(collision.bodyA)->GetShape();
+			// Gets COllisionBody ShapeB
+			iShape* shapeB = RigidBody::Cast(collision.bodyB)->GetShape();
+			if (shapeA->GetShapeType() == ShapeType::Sphere && shapeB->GetShapeType() == ShapeType::Sphere) {
+				// TODO: Hanlder Colission Sphere Sphere
+				printf("Sphere Shpere Collision! -> Handler\n");
+				//m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
+			}
 		}
 
 		// Step #2 : Verlet

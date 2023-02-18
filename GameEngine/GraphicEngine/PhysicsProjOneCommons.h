@@ -33,6 +33,8 @@ void PhysicsProjOneNewGame();
 void PhysicsProjOneRunning();
 void PhysicsProjOneShutdown();
 
+physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 position, Vector3 linearVelocity);
+
 iEnemy* enemyA = nullptr;
 iEnemy* enemyB = nullptr;
 iEnemy* enemyC = nullptr;
@@ -69,11 +71,7 @@ void PhysicsProjOneStartingUp() {
 	g_actorFacing.z = cos(g_actor->m_rotation.y);
 
 	physics::iShape* playerBallShape = new physics::SphereShape(2.0f);
-	physics::RigidBodyDesc PlayerDesc;
-	PlayerDesc.isStatic = false;
-	PlayerDesc.mass = 2.f;
-	PlayerDesc.position = g_actor->m_position;
-	PlayerDesc.linearVelocity = glm::vec3(0.f);
+	physics::RigidBodyDesc PlayerDesc = createRigidBodyDesc(false, 2.f, g_actor->m_position, glm::vec3(0.f));
 	g_actor->physicsBody = physicsFactory->CreateRigidBody(PlayerDesc, playerBallShape);
 	world->AddBody(g_actor->physicsBody);
 
@@ -81,23 +79,37 @@ void PhysicsProjOneStartingUp() {
 	cMeshObject* newPhysicsBall1 = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball1")->second;
 	// Create a ball 
 	physics::iShape* ballShape = new physics::SphereShape(1.0f);
-	physics::RigidBodyDesc ballDesc;
-	ballDesc.isStatic = false;
-	ballDesc.mass = 1.f;
-	ballDesc.position = newPhysicsBall1->m_position;
-	ballDesc.linearVelocity = glm::vec3(0.f);
-	
+	physics::RigidBodyDesc ballDesc = createRigidBodyDesc(false, 1.f, newPhysicsBall1->m_position, glm::vec3(0.f));	
 	newPhysicsBall1->physicsBody = physicsFactory->CreateRigidBody(ballDesc, ballShape);
 	world->AddBody(newPhysicsBall1->physicsBody);
 
 	// Create a plane
 	physics::iShape* planeShape = new physics::PlaneShape(0.0f, glm::vec3(0.f, 1.f, 0.f));
-	physics::RigidBodyDesc planeDesc;
-	planeDesc.isStatic = true;
-	planeDesc.mass = 0;
-	planeDesc.position = glm::vec3(0.f);
-	planeDesc.linearVelocity = glm::vec3(0.f);
+	physics::RigidBodyDesc planeDesc = createRigidBodyDesc(true, 0.f, glm::vec3(0.f), glm::vec3(0.f));
 	world->AddBody(physicsFactory->CreateRigidBody(planeDesc, planeShape));
+
+	// Create walls
+	for (int i = 1; i <= 4; i++) {
+		// Grabs the mesh
+		cMeshObject* theWall = g_ProjectManager->m_selectedScene->m_mMeshes.find("Wall" + std::to_string(i))->second;
+		// Define Wall Normal
+		Vector3 wallNormal;
+		switch (i) {
+			case 1 : wallNormal = glm::vec3(0.f, 0.f, 1.f);
+				break;
+			case 2 : wallNormal = glm::vec3(1.f, 0.f, 0.f);
+				break;
+			case 3 : wallNormal = glm::vec3(0.f, 0.f, -1.f); // TODO: Fix Not Working
+				break;
+			case 4 : wallNormal = glm::vec3(-1.f, 0.f, 0.f); // TODO: Fix Not Working
+				break;
+		}
+		// Creates Shape and Description
+		physics::iShape* wallShape = new physics::PlaneShape(1.0f, wallNormal);
+		physics::RigidBodyDesc wallDesc = createRigidBodyDesc(true, 0.f, theWall->m_position, glm::vec3(1.f));
+		theWall->physicsBody = physicsFactory->CreateRigidBody(wallDesc, wallShape);
+		world->AddBody(theWall->physicsBody);
+	}
 
 	// Gets the First enemy Mesh
 	//cMeshObject* pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball1")->second;
@@ -146,4 +158,13 @@ void PhysicsProjOneShutdown() {
 	delete enemyC;
 	delete physicsFactory;
 	delete world;
+}
+
+inline physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 position, Vector3 linearVelocity) {
+	physics::RigidBodyDesc desc;
+	desc.isStatic = isStatic;
+	desc.mass = mass;
+	desc.position = position;
+	desc.linearVelocity = linearVelocity;
+	return desc;
 }
