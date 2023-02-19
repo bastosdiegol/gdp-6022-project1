@@ -24,7 +24,7 @@ public:
 	/// After that if existing account for it and removes from the m_CollisionArray
 	/// </summary>
 	/// <returns>If found returns true</returns>
-	bool AccountSphereSphereCollision();
+	bool AccountForCollision();
 
 protected:
 	std::vector<sCollisionNotification> m_CollisionArray;

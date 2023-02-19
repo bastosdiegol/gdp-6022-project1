@@ -163,9 +163,9 @@ void PhysicsProjOneRunning() {
 	world->TimeStep(0.1f);
 	g_ProjectManager->Step();
 
-	while (false /*CollisionListener->AccountSphereSphereCollision()*/) {
-		// FMOD SOUNDS !
-		//g_FModManager->playSound("Hit", "ch2 fx");
+	while (collisionListener->AccountForCollision()) {
+		// FMOD sounds for Sphere Sphere Collision
+		g_FModManager->playSound("Hit", "ch2 fx");
 	}
 
 }
