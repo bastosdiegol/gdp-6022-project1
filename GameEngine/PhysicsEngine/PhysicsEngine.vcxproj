@@ -145,6 +145,7 @@
     <ClInclude Include="BodyType.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="CollisionHandler.h" />
+    <ClInclude Include="CollisionListener.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleSystem.h" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <ClCompile Include="AABBShape.cpp" />
     <ClCompile Include="CollisionHandler.cpp" />
+    <ClCompile Include="CollisionListener.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleSystem.cpp" />

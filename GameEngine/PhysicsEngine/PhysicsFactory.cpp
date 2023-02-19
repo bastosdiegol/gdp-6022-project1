@@ -1,6 +1,7 @@
 #include "PhysicsFactory.h"
 
 #include "PhysicsWorld.h"
+#include "CollisionListener.h"
 #include "RigidBody.h"
 #include "SoftBody.h"
 
@@ -28,5 +29,8 @@ namespace physics
 	iSoftBody* PhysicsFactory::CreateSoftBody(const SoftBodyDesc& desc)
 	{
 		return new SoftBody(desc);
+	}
+	iCollisionListener* PhysicsFactory::CreateCollisionListener() {
+		return new CollisionListener();
 	}
 }

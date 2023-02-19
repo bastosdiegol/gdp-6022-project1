@@ -127,14 +127,11 @@ namespace physics
 			// Gets COllisionBody ShapeB
 			iShape* shapeB = RigidBody::Cast(collision.bodyB)->GetShape();
 			if (shapeA->GetShapeType() == ShapeType::Sphere && shapeB->GetShapeType() == ShapeType::Sphere) {
-				// TODO: Hanlder Colission Sphere Sphere
 				printf("Sphere Shpere Collision! -> Handler\n");
-				//m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
+				m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
 			}
 			if (shapeA->GetShapeType() == ShapeType::Sphere && shapeB->GetShapeType() == ShapeType::AABB) {
-				// TODO: Hanlder Colission Sphere Sphere
-				printf("Sphere AABB Collision! -> Handler\n");
-				//m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
+				// Does Nothing
 			}
 		}
 

@@ -27,6 +27,7 @@ extern FModManager* g_FModManager;
 
 physics::iPhysicsFactory* physicsFactory;
 physics::iPhysicsWorld* world;
+physics::iCollisionListener* collisionListener;
 
 void PhysicsProjOneStartingUp();
 void PhysicsProjOneNewGame();
@@ -65,6 +66,11 @@ void PhysicsProjOneStartingUp() {
 	world = physicsFactory->CreateWorld();
 	world->SetGravity(Vector3(0.0f, -0.98f, 0.0f));
 
+	// Create CollisionListener
+	collisionListener = physicsFactory->CreateCollisionListener();
+	// Register it to the World
+	world->RegisterCollisionListener(collisionListener);
+
 	// Sets main actor
 	g_actor = g_ProjectManager->m_selectedScene->m_mMeshes.find("Player")->second;
 	// Adjust main actor facing direction
@@ -92,38 +98,37 @@ void PhysicsProjOneStartingUp() {
 	//physics::RigidBodyDesc planeDesc = createRigidBodyDesc(true, 0.f, glm::vec3(0.f), glm::vec3(0.f));
 	//world->AddBody(physicsFactory->CreateRigidBody(planeDesc, planeShape));
 
-
-	// Create walls
-	for (int i = 1; i <= 4; i++) {
-		// Grabs the mesh
-		cMeshObject* theWall = g_ProjectManager->m_selectedScene->m_mMeshes.find("Wall" + std::to_string(i))->second;
-		// Define Wall Normal
-		Vector3 wallNormal;
-		Vector3 wallPosition;
-		switch (i) {
-			case 1 : 
-				wallNormal = glm::vec3(0.f, 0.f, 1.f); // South Wall
-				wallPosition = glm::vec3(0.f);
-				break;
-			case 2 : 
-				wallNormal = glm::vec3(1.f, 0.f, 0.f); // East Wall
-				wallPosition = glm::vec3(0.f);
-				break;
-			case 3 : 
-				wallNormal = glm::vec3(0.f, 0.f, -1.f); // North Wall TODO: Fix Not Working
-				wallPosition = glm::vec3(0.f);
-				break;
-			case 4 : 
-				wallNormal = glm::vec3(-1.f, 0.f, 0.f); // West Wall TODO: Fix Not Working
-				wallPosition = glm::vec3(0.f);
-				break;
-		}
-		// Creates Shape and Description
-		physics::iShape* wallShape = new physics::PlaneShape(1.0f, wallNormal);
-		physics::RigidBodyDesc wallDesc = createRigidBodyDesc(true, 0.f, wallPosition, glm::vec3(0.f));
-		theWall->physicsBody = physicsFactory->CreateRigidBody(wallDesc, wallShape);
-		world->AddBody(theWall->physicsBody);
-	}
+	//// Create walls
+	//for (int i = 1; i <= 4; i++) {
+	//	// Grabs the mesh
+	//	cMeshObject* theWall = g_ProjectManager->m_selectedScene->m_mMeshes.find("Wall" + std::to_string(i))->second;
+	//	// Define Wall Normal
+	//	Vector3 wallNormal;
+	//	Vector3 wallPosition;
+	//	switch (i) {
+	//		case 1 : 
+	//			wallNormal = glm::vec3(0.f, 0.f, 1.f); // South Wall
+	//			wallPosition = glm::vec3(0.f);
+	//			break;
+	//		case 2 : 
+	//			wallNormal = glm::vec3(1.f, 0.f, 0.f); // East Wall
+	//			wallPosition = glm::vec3(0.f);
+	//			break;
+	//		case 3 : 
+	//			wallNormal = glm::vec3(0.f, 0.f, -1.f); // North Wall TODO: Fix Not Working
+	//			wallPosition = glm::vec3(0.f, 0.f, 63.f);
+	//			break;
+	//		case 4 : 
+	//			wallNormal = glm::vec3(-1.f, 0.f, 0.f); // West Wall TODO: Fix Not Working
+	//			wallPosition = glm::vec3(63.f, 0.f, 0.f);
+	//			break;
+	//	}
+	//	// Creates Shape and Description
+	//	physics::iShape* wallShape = new physics::PlaneShape(1.0f, wallNormal);
+	//	physics::RigidBodyDesc wallDesc = createRigidBodyDesc(true, 0.f, wallPosition, glm::vec3(0.f));
+	//	theWall->physicsBody = physicsFactory->CreateRigidBody(wallDesc, wallShape);
+	//	world->AddBody(theWall->physicsBody);
+	//}
 
 	// Gets the First enemy Mesh
 	//cMeshObject* pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball1")->second;
@@ -158,8 +163,11 @@ void PhysicsProjOneRunning() {
 	world->TimeStep(0.1f);
 	g_ProjectManager->Step();
 
-	// FMOD SOUNDS !
-	//g_FModManager->playSound("Hit", "ch2 fx");
+	while (false /*CollisionListener->AccountSphereSphereCollision()*/) {
+		// FMOD SOUNDS !
+		//g_FModManager->playSound("Hit", "ch2 fx");
+	}
+
 }
 
 void PhysicsProjOneShutdown() {

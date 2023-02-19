@@ -82,9 +82,12 @@ namespace physics
 	{
 		// Find the closest point to the AABB by clamping the point's coordinates
 		glm::vec3 closestPoint = point;
-		closestPoint.x = std::max(minBounds.x, std::min(point.x, maxBounds.x));
-		closestPoint.y = std::max(minBounds.y, std::min(point.y, maxBounds.y));
-		closestPoint.z = std::max(minBounds.z, std::min(point.z, maxBounds.z));
+		//closestPoint.x = std::max(minBounds.x, std::min(point.x, maxBounds.x));
+		//closestPoint.y = std::max(minBounds.y, std::min(point.y, maxBounds.y));
+		//closestPoint.z = std::max(minBounds.z, std::min(point.z, maxBounds.z));
+		closestPoint.x = glm::clamp(point.x, minBounds.x, maxBounds.x);
+		closestPoint.y = glm::clamp(point.y, minBounds.y, maxBounds.y);
+		closestPoint.z = glm::clamp(point.z, minBounds.z, maxBounds.z);
 		return closestPoint;
 	}
 
@@ -184,28 +187,7 @@ namespace physics
 		return true;
 	}
 
-	bool CollisionHandler::CollideSphereAABB(float dt, RigidBody* sphere, SphereShape* sphereA
-													, RigidBody* bodyAABB, AABBShape* shapeAABBShape) 
-	{
-		Vector3 spherePosition;
-		sphere->GetPosition(spherePosition);
-		// Compute squared distance between sphere center and AABB
-		float sqDist = SqDistPointAABB(spherePosition, shapeAABBShape);
-
-		// Sphere and AABB intersect if the (squared) distance
-		// between them is less than the (squared) sphere radius
-		bool collidedSphereAABB = sqDist <= sphereA->GetRadius() * sphereA->GetRadius();
-
-		// TODO: Implement Verlet Collision Sphere AABB
-		if (collidedSphereAABB) {
-			sphere->m_Position = sphere->m_PreviousPosition;
-		}
-
-		return collidedSphereAABB;
-
-	}
-
-	bool CollisionHandler::CollideSphereAABB2(float dt, RigidBody* sphere, SphereShape* sphereShape
+	bool CollisionHandler::CollideSphereAABB(float dt, RigidBody* sphere, SphereShape* sphereShape
 		, RigidBody* bodyAABB, AABBShape* shapeAABBShape)
 	{
 		Vector3 spherePosition;
@@ -279,7 +261,7 @@ namespace physics
 
 			// Here we ensure we are on the right side of the plane
 			//closestPoint = ClosestPtPointPlane(sphere->m_Position.GetGLM(), planeShape->GetNormal().GetGLM(), planeShape->GetDotProduct());
-			closestPointToAABB(aabbSphereClosestPoint, aabbMin, aabbMax);
+			aabbSphereClosestPoint = closestPointToAABB(sphere->m_Position.GetGLM(), aabbMin, aabbMax);
 			overlapVector = aabbSphereClosestPoint - sphere->m_Position.GetGLM();
 			overlapLength = glm::length(overlapVector);
 			if (overlapLength < sphereShape->GetRadius())
@@ -308,9 +290,6 @@ namespace physics
 
 		return true;
 	}
-
-	
-
 
 	bool CollisionHandler::CollideSpherePlane(float dt, RigidBody* sphere, SphereShape* sphereShape,
 		RigidBody* plane, PlaneShape* planeShape)
