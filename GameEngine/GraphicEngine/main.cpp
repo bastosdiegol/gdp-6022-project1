@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> 
+#include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
@@ -58,62 +59,45 @@ Vector3 g_rightVector;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	const float MOVE_SPEED = 0.5f;
 	const float ANGLE_TURN = 2.0f;
+	const float ZOOM_FACTOR = 0.1f;
 
 	glm::vec3 direction(0.f);
 	float force = 5.f;
 
+	float distanceBetweenEyeTarget = glm::distance(*g_cameraEye, *g_cameraTarget);
+	glm::vec3 cameraDirectionToTarget = glm::normalize(*g_cameraTarget - *g_cameraEye);
+	float cameraAngleTurn = glm::radians(ANGLE_TURN);
+	glm::vec3 newCameraDirection;
+
 	if (key == GLFW_KEY_A /*&& action == GLFW_PRESS*/)     // Left
 	{
-		//g_actor->m_rotation.y += glm::radians(ANGLE_TURN);
-		//g_actorFacing.x = sin(g_actor->m_rotation.y);
-		//g_actorFacing.z = cos(g_actor->m_rotation.y);
 		direction.x += -1;
 	}
 	if (key == GLFW_KEY_D /*&& action == GLFW_PRESS*/)     // Right
 	{
-		//g_actor->m_rotation.y -= glm::radians(ANGLE_TURN);
-		//g_actorFacing.x = sin(g_actor->m_rotation.y);
-		//g_actorFacing.z = cos(g_actor->m_rotation.y);
 		direction.x += 1;
 	}
 	if (key == GLFW_KEY_W /*&& action == GLFW_PRESS*/)     // Forward
 	{
-		//g_actor->m_position.x += g_actorFacing.x * MOVE_SPEED;
-		//g_actor->m_position.z += g_actorFacing.z * MOVE_SPEED;
 		direction.z += -1;
 	}
 	if (key == GLFW_KEY_S /*&& action == GLFW_PRESS*/)     // Backwards
 	{
-		//g_actor->m_position.x -= g_actorFacing.x * MOVE_SPEED;
-		//g_actor->m_position.z -= g_actorFacing.z * MOVE_SPEED;
 		direction.z += 1;
 	}
-	if (key == GLFW_KEY_Q /*&& action == GLFW_PRESS*/)     // Down
-	{
-		g_cameraEye->y -= MOVE_SPEED;
-		g_cameraTarget->y -= MOVE_SPEED;
-	}
-	if (key == GLFW_KEY_E && action == GLFW_PRESS)     // Up
-	{
-
-	}
 	if (key == GLFW_KEY_UP /*&& action == GLFW_PRESS*/) {
-		g_cameraEye->z += MOVE_SPEED;
+		*g_cameraEye += ZOOM_FACTOR * distanceBetweenEyeTarget * cameraDirectionToTarget;
 	}
 	if (key == GLFW_KEY_DOWN /*&& action == GLFW_PRESS*/) {
-		g_cameraEye->z -= MOVE_SPEED;
+		*g_cameraEye -= ZOOM_FACTOR * distanceBetweenEyeTarget * cameraDirectionToTarget;
 	}
-	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
-		g_cameraTarget->x += MOVE_SPEED;
+	if (key == GLFW_KEY_LEFT /*&& action == GLFW_PRESS*/) {
+		newCameraDirection = glm::rotate(cameraDirectionToTarget, cameraAngleTurn, glm::vec3(0.0f, -1.0f, 0.0f));
+		*g_cameraEye = *g_cameraTarget - distanceBetweenEyeTarget * newCameraDirection;
 	}
-	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-		g_cameraTarget->x -= MOVE_SPEED;
-	}
-	if (key == GLFW_KEY_F6 && action == GLFW_PRESS) {
-		nextBeholder();
-	}
-	if (key == GLFW_KEY_F7 && action == GLFW_PRESS) {
-		findClosestTargets();
+	if (key == GLFW_KEY_RIGHT /*&& action == GLFW_PRESS*/) {
+		newCameraDirection = glm::rotate(cameraDirectionToTarget, cameraAngleTurn, glm::vec3(0.0f, 1.0f, 0.0f));
+		*g_cameraEye = *g_cameraTarget - distanceBetweenEyeTarget * newCameraDirection;
 	}
 	if (key == GLFW_KEY_ESCAPE) {
 		g_ProjectManager->m_GameLoopState = SHUTING_DOWN;
@@ -126,51 +110,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 		g_isClicked = true;
 }
-
-//void key_callback_physics_proj(GLFWwindow* window, int key, int scancode, int action, int mods) {
-//	const float MOVE_SPEED = 1.0f;
-//	const float dt = 0.1f;
-//
-//	if (key == GLFW_KEY_A && (action == GLFW_REPEAT || action == GLFW_PRESS))     // Left
-//	{
-//		*g_cameraEye -= g_rightVector.GetGLM() * MOVE_SPEED * dt;
-//	}
-//	if (key == GLFW_KEY_D && (action == GLFW_REPEAT || action == GLFW_PRESS))     // Right
-//	{
-//		*g_cameraEye += g_rightVector.GetGLM() * MOVE_SPEED * dt;
-//	}
-//	if (key == GLFW_KEY_W && (action == GLFW_REPEAT || action == GLFW_PRESS))     // Forward
-//	{
-//		*g_cameraEye += g_forwardVector.GetGLM() * MOVE_SPEED * dt;
-//	}
-//	if (key == GLFW_KEY_S && (action == GLFW_REPEAT || action == GLFW_PRESS))     // Backwards
-//	{
-//		*g_cameraEye -= g_forwardVector.GetGLM() * MOVE_SPEED * dt;
-//	}
-//	//if (key == GLFW_KEY_Q && action == GLFW_PRESS)     // Down
-//	//{
-//	//	
-//	//}
-//	//if (key == GLFW_KEY_E && action == GLFW_PRESS)     // Up
-//	//{
-//	//	
-//	//}
-//	if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-//		g_cameraTarget->z += MOVE_SPEED;
-//	}
-//	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-//		g_cameraTarget->z -= MOVE_SPEED;
-//	}
-//	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
-//		g_cameraTarget->x += MOVE_SPEED;
-//	}
-//	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-//		g_cameraTarget->x -= MOVE_SPEED;
-//	}
-//	if (key == GLFW_KEY_ESCAPE) {
-//		g_ProjectManager->m_GameLoopState = SHUTING_DOWN;
-//	}
-//}
 
 static void error_callback(int error, const char* description) {
 	fprintf(stderr, "Glfw Error %d: %s\n", error, description);

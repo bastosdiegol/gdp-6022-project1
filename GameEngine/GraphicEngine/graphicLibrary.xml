@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <graphicsLibrary>
-	<scene title="1.Physics Proj#1" camEyeX="0" camEyeY="75" camEyeZ="-32" camTarX="32" camTarY="-5" camTarZ="32">
+	<scene title="1.Physics Proj#1" camEyeX="0" camEyeY="75" camEyeZ="-32" camTarX="32" camTarY="0" camTarZ="32">
 		<model path="assets/physics_proj3/newPlane.ply" title="Plane">
 			<mesh id="Plane">
 				<position x="0" y="0" z="0" />
