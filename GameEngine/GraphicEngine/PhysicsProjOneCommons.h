@@ -37,10 +37,6 @@ void PhysicsProjOneShutdown();
 physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 position, Vector3 linearVelocity);
 void setMeshObjectAsStaticPhysObjectAABB(std::string name);
 
-iEnemy* enemyA = nullptr;
-iEnemy* enemyB = nullptr;
-iEnemy* enemyC = nullptr;
-
 void PhysicsProjOneGameLoop() {
 	switch (g_ProjectManager->m_GameLoopState) {
 	case GameState::STARTING_UP:
@@ -76,12 +72,12 @@ void PhysicsProjOneStartingUp() {
 	// Adjust main actor facing direction
 	g_actorFacing.x = sin(g_actor->m_rotation.y);
 	g_actorFacing.z = cos(g_actor->m_rotation.y);
-
 	physics::iShape* playerBallShape = new physics::SphereShape(2.0f);
 	physics::RigidBodyDesc PlayerDesc = createRigidBodyDesc(false, 2.f, g_actor->m_position, glm::vec3(0.f));
 	g_actor->physicsBody = physicsFactory->CreateRigidBody(PlayerDesc, playerBallShape);
 	world->AddBody(g_actor->physicsBody);
 
+	// Creates all 5 Balls
 	for (int i = 1; i <= 5; i++) {
 		cMeshObject* newPhysicsBall = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball" + std::to_string(i))->second;
 		// Create a ball 
@@ -94,57 +90,6 @@ void PhysicsProjOneStartingUp() {
 	// Create a AABB Plane
 	setMeshObjectAsStaticPhysObjectAABB("Plane");
 
-	// Create a plane
-	//physics::iShape* planeShape = new physics::PlaneShape(0.0f, glm::vec3(0.f, 1.f, 0.f));
-	//physics::RigidBodyDesc planeDesc = createRigidBodyDesc(true, 0.f, glm::vec3(0.f), glm::vec3(0.f));
-	//world->AddBody(physicsFactory->CreateRigidBody(planeDesc, planeShape));
-
-	//// Create walls
-	//for (int i = 1; i <= 4; i++) {
-	//	// Grabs the mesh
-	//	cMeshObject* theWall = g_ProjectManager->m_selectedScene->m_mMeshes.find("Wall" + std::to_string(i))->second;
-	//	// Define Wall Normal
-	//	Vector3 wallNormal;
-	//	Vector3 wallPosition;
-	//	switch (i) {
-	//		case 1 : 
-	//			wallNormal = glm::vec3(0.f, 0.f, 1.f); // South Wall
-	//			wallPosition = glm::vec3(0.f);
-	//			break;
-	//		case 2 : 
-	//			wallNormal = glm::vec3(1.f, 0.f, 0.f); // East Wall
-	//			wallPosition = glm::vec3(0.f);
-	//			break;
-	//		case 3 : 
-	//			wallNormal = glm::vec3(0.f, 0.f, -1.f); // North Wall TODO: Fix Not Working
-	//			wallPosition = glm::vec3(0.f, 0.f, 63.f);
-	//			break;
-	//		case 4 : 
-	//			wallNormal = glm::vec3(-1.f, 0.f, 0.f); // West Wall TODO: Fix Not Working
-	//			wallPosition = glm::vec3(63.f, 0.f, 0.f);
-	//			break;
-	//	}
-	//	// Creates Shape and Description
-	//	physics::iShape* wallShape = new physics::PlaneShape(1.0f, wallNormal);
-	//	physics::RigidBodyDesc wallDesc = createRigidBodyDesc(true, 0.f, wallPosition, glm::vec3(0.f));
-	//	theWall->physicsBody = physicsFactory->CreateRigidBody(wallDesc, wallShape);
-	//	world->AddBody(theWall->physicsBody);
-	//}
-
-	// Gets the First enemy Mesh
-	//cMeshObject* pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball1")->second;
-	// Instantiate the Enemy Red Ball - Seeks and Flees
-	//enemyA = new cEnemyTypeA(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
-	// Gets the Second enemy Mesh
-	//cMeshObject* pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball2")->second;
-	//// Instantiate the Enemy Green Ball - Pursues and Evades
-	//enemyB = new cEnemyTypeB(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
-	//// Gets the First enemy Mesh
-	//pObjEnemy = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball3")->second;
-	//// Instantiate the Blue Ball - Approaches
-	//enemyC = new cEnemyTypeC(pObjEnemy->m_position, pObjEnemy->m_rotation, g_actor->m_position, g_actor->m_rotation, g_actorFacing);
-	//// Sets the game state to running
-
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
 }
 
@@ -155,12 +100,7 @@ void PhysicsProjOneNewGame() {
 void PhysicsProjOneRunning() {
 	// *********
 	// MAIN LOOP
-	// *********
-	// Applies each enemy behavior
-	//enemyA->performBehaviour();
-	//enemyB->performBehaviour();
-	//enemyC->performBehaviour();
-	
+	// *********	
 	world->TimeStep(0.1f);
 	g_ProjectManager->Step();
 
@@ -175,13 +115,11 @@ void PhysicsProjOneShutdown() {
 	// Closing the Application
 	glfwSetWindowShouldClose(window, true);
 	// Deletes thigs
-	delete enemyA;
-	delete enemyB;
-	delete enemyC;
 	delete physicsFactory;
 	delete world;
 }
 
+// Creates a Description for a Rigid Body
 physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 position, Vector3 linearVelocity) {
 	physics::RigidBodyDesc desc;
 	desc.isStatic = isStatic;
@@ -191,6 +129,7 @@ physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 po
 	return desc;
 }
 
+// Creates a Description for a AABB and adds it to the World
 void setMeshObjectAsStaticPhysObjectAABB(std::string name) {
 	cMeshObject* theMesh;
 	// Links the MeshObject to the AABB PhysicsObject
