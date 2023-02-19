@@ -548,17 +548,21 @@ void FModManager::playSound(const std::string& sound_name, const std::string& ch
 		return;
 	}
 
-	m_result = m_system->playSound(itSound->second->m_sound, itChannel->second->m_group, true, &itSound->second->m_channel);
-	// Checks the result
-	if (m_result != FMOD_OK) {
-		std::cout << "fmod error: #" << m_result << "-" << FMOD_ErrorString(m_result) << std::endl;
-		return;
-	}
+	bool isPlaying = false;
+	itChannel->second->m_group->isPlaying(&isPlaying);
+	if (!isPlaying) {
+		m_result = m_system->playSound(itSound->second->m_sound, itChannel->second->m_group, true, &itSound->second->m_channel);
+		// Checks the result
+		if (m_result != FMOD_OK) {
+			std::cout << "fmod error: #" << m_result << "-" << FMOD_ErrorString(m_result) << std::endl;
+			return;
+		}
 
-	m_result = itSound->second->m_channel->setPaused(false);
-	if (m_result != FMOD_OK) {
-		std::cout << "fmod error: #" << m_result << "-" << FMOD_ErrorString(m_result) << std::endl;
-		return;
+		m_result = itSound->second->m_channel->setPaused(false);
+		if (m_result != FMOD_OK) {
+			std::cout << "fmod error: #" << m_result << "-" << FMOD_ErrorString(m_result) << std::endl;
+			return;
+		}
 	}
 
 }

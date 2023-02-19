@@ -71,19 +71,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_A /*&& action == GLFW_PRESS*/)     // Left
 	{
-		direction.x += -1;
+		direction.x += 1;
 	}
 	if (key == GLFW_KEY_D /*&& action == GLFW_PRESS*/)     // Right
 	{
-		direction.x += 1;
+		direction.x += -1;
 	}
 	if (key == GLFW_KEY_W /*&& action == GLFW_PRESS*/)     // Forward
 	{
-		direction.z += -1;
+		direction.z += 1;
 	}
 	if (key == GLFW_KEY_S /*&& action == GLFW_PRESS*/)     // Backwards
 	{
-		direction.z += 1;
+		direction.z += -1;
 	}
 	if (key == GLFW_KEY_UP /*&& action == GLFW_PRESS*/) {
 		*g_cameraEye += ZOOM_FACTOR * distanceBetweenEyeTarget * cameraDirectionToTarget;
@@ -196,9 +196,9 @@ int main(int argc, char* argv[]) {
 
 	// Sets initial volume for master channel to 20%
 	// WARNING: DO NOT PASS VOLUME VALUE ABOVE 1.0f
-	g_FModManager->setChannelGroupVolume("ch0 master", 0.2f);
-	g_FModManager->setChannelGroupVolume("ch1 music", 0.2f);
-	g_FModManager->setChannelGroupVolume("ch2 fx", 0.2f);
+	g_FModManager->setChannelGroupVolume("ch0 master", 0.5f);
+	g_FModManager->setChannelGroupVolume("ch1 music", 0.5f);
+	g_FModManager->setChannelGroupVolume("ch2 fx", 0.5f);
 
 	g_FModManager->loadDSPs();
 	g_FModManager->loadSoundsFromFile("sounds.xml");

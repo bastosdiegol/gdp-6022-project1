@@ -82,13 +82,14 @@ void PhysicsProjOneStartingUp() {
 	g_actor->physicsBody = physicsFactory->CreateRigidBody(PlayerDesc, playerBallShape);
 	world->AddBody(g_actor->physicsBody);
 
-
-	cMeshObject* newPhysicsBall1 = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball1")->second;
-	// Create a ball 
-	physics::iShape* ballShape = new physics::SphereShape(1.0f);
-	physics::RigidBodyDesc ballDesc = createRigidBodyDesc(false, 1.f, newPhysicsBall1->m_position, glm::vec3(0.f));	
-	newPhysicsBall1->physicsBody = physicsFactory->CreateRigidBody(ballDesc, ballShape);
-	world->AddBody(newPhysicsBall1->physicsBody);
+	for (int i = 1; i <= 5; i++) {
+		cMeshObject* newPhysicsBall = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball" + std::to_string(i))->second;
+		// Create a ball 
+		physics::iShape* ballShape = new physics::SphereShape(newPhysicsBall->m_scale.x);
+		physics::RigidBodyDesc ballDesc = createRigidBodyDesc(false, newPhysicsBall->m_scale.x, newPhysicsBall->m_position, glm::vec3(0.f));
+		newPhysicsBall->physicsBody = physicsFactory->CreateRigidBody(ballDesc, ballShape);
+		world->AddBody(newPhysicsBall->physicsBody);
+	}
 
 	// Create a AABB Plane
 	setMeshObjectAsStaticPhysObjectAABB("Plane");
