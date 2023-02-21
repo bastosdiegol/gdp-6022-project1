@@ -202,8 +202,6 @@ namespace physics
 		float linearVelocityLength = glm::length(sphere->m_LinearVelocity.GetGLM());
 		float angularVelocityLength = glm::length(sphere->m_AngularVelocity.GetGLM());
 
-		printf("---- BEFORE ---- aabbSphereClosestPoint: %f, %f, %f\n", aabbSphereClosestPoint.x, aabbSphereClosestPoint.y, aabbSphereClosestPoint.z);
-
 		if (linearVelocityLength > 0.f || angularVelocityLength > 0.f)
 		{
 			float velocity = glm::length(sphere->m_LinearVelocity.GetGLM());
@@ -264,7 +262,6 @@ namespace physics
 			overlapVector = aabbSphereClosestPoint - sphere->m_Position.GetGLM();
 			overlapLength = glm::length(overlapVector);
 			//if (aabbSphereClosestPoint > glm::vec3(0.f));
-			printf("---- AFTER ---- aabbSphereClosestPoint: %f, %f, %f\n", aabbSphereClosestPoint.x, aabbSphereClosestPoint.y, aabbSphereClosestPoint.z);
 			if (overlapLength < sphereShape->GetRadius())
 			{
 				// we are still colliding!!!
