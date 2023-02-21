@@ -20,6 +20,7 @@ public:
 	glm::vec3		m_position;
 	glm::vec3		m_rotation;
 	glm::vec3		m_scale;
+	glm::quat		qRotation;
 	bool			m_bUse_RGBA_colour; // When true, it will overwrite the vertex colours
 	glm::vec4		m_RGBA_colour; // Diffuse Colour RGB & Alpha, 0,0,0,1 (black, with transparency of 1.0)
 	glm::vec4		m_specular_colour_and_power;  // RGB is the specular highlight colour; w is the power

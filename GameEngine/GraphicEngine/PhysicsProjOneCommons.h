@@ -60,7 +60,7 @@ void PhysicsProjOneStartingUp() {
 
 	// Create Physics World
 	world = physicsFactory->CreateWorld();
-	world->SetGravity(Vector3(0.0f, -0.98f, 0.0f));
+	world->SetGravity(Vector3(0.0f, -1.f, 0.0f));
 
 	// Create CollisionListener
 	collisionListener = physicsFactory->CreateCollisionListener();

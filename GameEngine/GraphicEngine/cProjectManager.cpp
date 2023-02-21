@@ -3,7 +3,9 @@
 
 #include <glm/gtc/matrix_transform.hpp> 
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
-
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include "cProjectManager.h"
 #include "cMeshObject.h"
 
@@ -512,6 +514,17 @@ void cProjectManager::Step()
 			pCurrentMeshObject->physicsBody->GetPosition(newPositionVector);
 			glm::vec3 newPosition = glm::vec3(newPositionVector.x, newPositionVector.y, newPositionVector.z);
 			pCurrentMeshObject->m_position = newPosition;
+
+			glm::quat newRotation;
+			pCurrentMeshObject->physicsBody->GetRotation(newRotation);
+
+			//glm::vec3 euler = glm::eulerAngles(newRotation);
+
+			//pCurrentMeshObject->m_rotation.x = newRotation.x;
+			//pCurrentMeshObject->m_rotation.y = newRotation.y;
+			//pCurrentMeshObject->m_rotation.z = newRotation.z;
+
+			pCurrentMeshObject->qRotation = newRotation;
 		}
 	}
 }
@@ -522,17 +535,21 @@ void cProjectManager::DrawObject(cMeshObject* pCurrentMeshObject, GLuint shaderI
 	// Apply Position Transformation
 	glm::mat4 matTranslation = glm::translate(glm::mat4(1.0f), pCurrentMeshObject->m_position);
 	// Apply Rotation Transformation
-	glm::mat4 matRoationZ = glm::rotate(glm::mat4(1.0f), pCurrentMeshObject->m_rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 matRoationY = glm::rotate(glm::mat4(1.0f), pCurrentMeshObject->m_rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 matRoationX = glm::rotate(glm::mat4(1.0f), pCurrentMeshObject->m_rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 matQRotation = glm::mat4(pCurrentMeshObject->qRotation);
+	//glm::mat4 matRoationZ = glm::rotate(glm::mat4(1.0f), pCurrentMeshObject->m_rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	//glm::mat4 matRoationY = glm::rotate(glm::mat4(1.0f), pCurrentMeshObject->m_rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	//glm::mat4 matRoationX = glm::rotate(glm::mat4(1.0f), pCurrentMeshObject->m_rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 	// Scale the object
 	glm::vec3 uniformScale = pCurrentMeshObject->m_scale;
 	glm::mat4 matScale = glm::scale(glm::mat4(1.0f), glm::vec3(uniformScale.x, uniformScale.y, uniformScale.z));
 	// Applying all these transformations to the Model
 	matModel = matModel * matTranslation;
-	matModel = matModel * matRoationX;
-	matModel = matModel * matRoationY;
-	matModel = matModel * matRoationZ;
+
+	matModel = matModel * matQRotation;
+	//matModel = matModel * matRoationX;
+	//matModel = matModel * matRoationY;
+	//matModel = matModel * matRoationZ;
+
 	matModel = matModel * matScale;
 
 	if (pCurrentMeshObject->m_bIsVisible) {

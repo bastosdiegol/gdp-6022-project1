@@ -82,12 +82,12 @@ namespace physics
 	{
 		// Find the closest point to the AABB by clamping the point's coordinates
 		glm::vec3 closestPoint = point;
-		//closestPoint.x = std::max(minBounds.x, std::min(point.x, maxBounds.x));
-		//closestPoint.y = std::max(minBounds.y, std::min(point.y, maxBounds.y));
-		//closestPoint.z = std::max(minBounds.z, std::min(point.z, maxBounds.z));
-		closestPoint.x = glm::clamp(point.x, minBounds.x, maxBounds.x);
-		closestPoint.y = glm::clamp(point.y, minBounds.y, maxBounds.y);
-		closestPoint.z = glm::clamp(point.z, minBounds.z, maxBounds.z);
+		closestPoint.x = std::max(minBounds.x, std::min(point.x, maxBounds.x));
+		closestPoint.y = std::max(minBounds.y, std::min(point.y, maxBounds.y));
+		closestPoint.z = std::max(minBounds.z, std::min(point.z, maxBounds.z));
+		//closestPoint.x = glm::clamp(point.x, minBounds.x, maxBounds.x);
+		//closestPoint.y = glm::clamp(point.y, minBounds.y, maxBounds.y);
+		//closestPoint.z = glm::clamp(point.z, minBounds.z, maxBounds.z);
 		return closestPoint;
 	}
 
@@ -202,6 +202,8 @@ namespace physics
 		float linearVelocityLength = glm::length(sphere->m_LinearVelocity.GetGLM());
 		float angularVelocityLength = glm::length(sphere->m_AngularVelocity.GetGLM());
 
+		printf("---- BEFORE ---- aabbSphereClosestPoint: %f, %f, %f\n", aabbSphereClosestPoint.x, aabbSphereClosestPoint.y, aabbSphereClosestPoint.z);
+
 		if (linearVelocityLength > 0.f || angularVelocityLength > 0.f)
 		{
 			float velocity = glm::length(sphere->m_LinearVelocity.GetGLM());
@@ -224,12 +226,9 @@ namespace physics
 			glm::vec3 impactComponent = glm::proj(sphere->m_LinearVelocity.GetGLM(), shapeAABBShape->GetNormal().GetGLM());
 			glm::vec3 impactTangent = sphere->m_LinearVelocity.GetGLM() - impactComponent;
 
-
 			glm::vec3 relativePoint = glm::normalize(aabbSphereClosestPoint - sphere->m_Position.GetGLM()) * sphereShape->GetRadius();
 			float surfaceVelocity = sphereShape->GetRadius() * glm::length(sphere->m_AngularVelocity.GetGLM());
 			glm::vec3 rotationDirection = glm::normalize(glm::cross(relativePoint - sphere->m_Position.GetGLM(), sphere->m_AngularVelocity.GetGLM()));
-
-
 
 			// Detect if we are bouncing off the plane, or "moving" along it.
 			if (glm::dot(impactTangent, shapeAABBShape->GetNormal().GetGLM()) > 0.f)
@@ -256,7 +255,7 @@ namespace physics
 
 			//if (glm::length(impactTangent) > 0.001f)
 			//{
-			//	sphere->m_Velocity += impactTangent * 0.1f;
+			//	sphere->m_LinearVelocity += impactTangent * 0.1f;
 			//}
 
 			// Here we ensure we are on the right side of the plane
@@ -264,6 +263,8 @@ namespace physics
 			aabbSphereClosestPoint = closestPointToAABB(sphere->m_Position.GetGLM(), aabbMin, aabbMax);
 			overlapVector = aabbSphereClosestPoint - sphere->m_Position.GetGLM();
 			overlapLength = glm::length(overlapVector);
+			//if (aabbSphereClosestPoint > glm::vec3(0.f));
+			printf("---- AFTER ---- aabbSphereClosestPoint: %f, %f, %f\n", aabbSphereClosestPoint.x, aabbSphereClosestPoint.y, aabbSphereClosestPoint.z);
 			if (overlapLength < sphereShape->GetRadius())
 			{
 				// we are still colliding!!!
