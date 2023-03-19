@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <graphicsLibrary>
-	<scene title="1.Physics Proj#1" camEyeX="0" camEyeY="75" camEyeZ="-32" camTarX="32" camTarY="0" camTarZ="32">
-		<model path="assets/physics_proj3/newPlane.ply" title="Plane">
+	<scene title="2.Physics Proj#2" camEyeX="0" camEyeY="75" camEyeZ="-32" camTarX="32" camTarY="0" camTarZ="32">
+		<model path="assets/Platform32x32.ply" title="Plane">
 			<mesh id="Plane">
 				<position x="0" y="0" z="0" />
 				<rotate x="0" y="0" z="0" />
@@ -17,70 +17,13 @@
 		</model>
 		<model path="assets/ISO_Shphere.ply" title="Player">
 			<mesh id="Player">
-				<position x="32" y="5" z="32" />
+				<position x="15" y="10" z="15" />
 				<rotate x="0" y="0" z="0" />
 				<useColor value="true" />
 				<color r="0.82745" g="0.82745" b="0.82745" a="1" />
-				<scale value="2" />
-				<isWireframe value="false" />
-				<doNotLight value="false" />
-				<visible value="true" />
-				<boundingBox value="false" />
-			</mesh>
-		</model>
-		<model path="assets/ISO_Shphere.ply" title="TargetBall">
-			<mesh id="Ball1">
-				<position x="10" y="15" z="10" />
-				<rotate x="0" y="0" z="0" />
-				<useColor value="true" />
-				<color r="1" g="0" b="0" a="1" />
-				<scale value="0.5" />
-				<isWireframe value="false" />
-				<doNotLight value="true" />
-				<visible value="true" />
-				<boundingBox value="false" />
-			</mesh>
-			<mesh id="Ball2">
-				<position x="20" y="15" z="20" />
-				<rotate x="0" y="0" z="0" />
-				<useColor value="true" />
-				<color r="0" g="1" b="0" a="1" />
 				<scale value="1" />
 				<isWireframe value="false" />
-				<doNotLight value="true" />
-				<visible value="true" />
-				<boundingBox value="false" />
-			</mesh>
-			<mesh id="Ball3">
-				<position x="40" y="5" z="10" />
-				<rotate x="0" y="0" z="0" />
-				<useColor value="true" />
-				<color r="0" g="0" b="1" a="1" />
-				<scale value="1.5" />
-				<isWireframe value="false" />
-				<doNotLight value="true" />
-				<visible value="true" />
-				<boundingBox value="false" />
-			</mesh>
-			<mesh id="Ball4">
-				<position x="40" y="5" z="40" />
-				<rotate x="0" y="0" z="0" />
-				<useColor value="true" />
-				<color r="1" g="0" b="1" a="1" />
-				<scale value="3" />
-				<isWireframe value="false" />
-				<doNotLight value="true" />
-				<visible value="true" />
-				<boundingBox value="false" />
-			</mesh>
-			<mesh id="Ball5">
-				<position x="10" y="5" z="40" />
-				<rotate x="0" y="0" z="0" />
-				<useColor value="true" />
-				<color r="0" g="1" b="1" a="1" />
-				<scale value="4" />
-				<isWireframe value="false" />
-				<doNotLight value="true" />
+				<doNotLight value="false" />
 				<visible value="true" />
 				<boundingBox value="false" />
 			</mesh>

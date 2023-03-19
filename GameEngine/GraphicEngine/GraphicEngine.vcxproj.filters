@@ -147,6 +147,9 @@
     <ClCompile Include="cEnemyTypeC.cpp">
       <Filter>Source Files\ai</Filter>
     </ClCompile>
+    <ClCompile Include="cMeshFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cProjectManager.h">
@@ -230,7 +233,7 @@
     <ClInclude Include="CTextureFromBMP.h">
       <Filter>Header Files\textures</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsProjOneCommons.h">
+    <ClInclude Include="PhysicsProjTwoCommons.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="cEnemyTypeA.h">
@@ -249,6 +252,9 @@
       <Filter>Header Files\ai</Filter>
     </ClInclude>
     <ClInclude Include="FinalExamCommons.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cMeshFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
