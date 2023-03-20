@@ -57,6 +57,21 @@ namespace physics
 		m_Position = position;
 	}
 
+	void RigidBody::GetVelocity(Vector3& velocity)
+	{
+		velocity = m_LinearVelocity;
+	}
+
+	void RigidBody::GetRestitution(float& restitution)
+	{
+		restitution = m_Restitution;
+	}
+
+	void RigidBody::GetMass(float& mass)
+	{
+		mass = m_Mass;
+	}
+
 	void RigidBody::GetRotation(glm::quat& rotation)
 	{
 		rotation = m_Rotation;

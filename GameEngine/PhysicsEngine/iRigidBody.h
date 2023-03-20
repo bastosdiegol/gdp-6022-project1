@@ -16,6 +16,10 @@ namespace physics
 		virtual void GetPosition(Vector3& position) = 0;
 		virtual void SetPosition(const Vector3& position) = 0;
 
+		virtual void GetVelocity(Vector3& velocity) = 0;
+		virtual void GetRestitution(float& restitution) = 0;
+		virtual void GetMass(float& mass) = 0;
+
 		virtual void GetRotation(glm::quat& rotation) = 0;
 		virtual void SetRotation(const glm::quat& rotation) = 0;
 
