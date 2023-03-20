@@ -29,7 +29,7 @@ extern cMeshFactory* g_MeshFactory;
 physics::iPhysicsFactory* physicsFactory;
 physics::iPhysicsWorld* world;
 physics::iCollisionListener* collisionListener;
-unsigned int yPosition = 0;
+unsigned int yPosition = 10;
 
 void PhysicsProjTwoStartingUp();
 void PhysicsProjTwoNewGame();
@@ -106,7 +106,7 @@ void PhysicsProjTwoRunning() {
 	}
 
 	// Factory Test
-	if (yPosition % 55 == 0) {
+	//if (yPosition % 55 == 0) {
 		cMeshObject* newCube = g_MeshFactory->createCubeMesh();
 		newCube->m_position = glm::vec3(16.f, yPosition, 16.f);
 		newCube->m_meshName = "Cube" + std::to_string(yPosition);
@@ -114,8 +114,8 @@ void PhysicsProjTwoRunning() {
 		newCube->m_RGBA_colour = glm::vec4(1.f, 0.f, 1.f, 1.f);
 		g_ProjectManager->m_selectedScene->m_mMeshes.try_emplace(newCube->m_meshName, newCube);
 		setMeshObjectAsPhysObjectAABB(newCube);
-	}
-	yPosition++;
+	//}
+	//yPosition++;
 
 }
 
@@ -152,10 +152,9 @@ void setMeshObjectAsStaticPhysObjectAABB(std::string name) {
 	physics::iShape* theAABBShape = new physics::AABBShape(min, max, Vector3(0.f, 1.f, 0.f));
 
 	// Adds the AABB to the Physics World
-	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 0.f, theMesh->m_position, glm::vec3(0.f));
+	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 1.f, theMesh->m_position, glm::vec3(0.f));
 	world->AddBody(physicsFactory->CreateRigidBody(AABBDesc, theAABBShape));
 }
-
 
 // Creates a Description for a AABB and adds it to the World
 void setMeshObjectAsPhysObjectAABB(cMeshObject* obj) {

@@ -504,7 +504,9 @@ namespace physics
 
 		if (!collide) {
 			// Apply an impulse to the first AABB in the direction of the collision normal
-			glm::vec3 collisionNormal = getCollisionNormal((shapeAMin + shapeAMax) / 2.0f, (shapeBMin + shapeBMax) / 2.0f);
+			glm::vec3 shapeACenter = (shapeAMin + shapeAMax) / 2.0f;
+			glm::vec3 shapeBCenter = (shapeBMin + shapeBMax) / 2.0f;
+			glm::vec3 collisionNormal = getCollisionNormal(shapeACenter, shapeBCenter);
 			
 			if (rigidA->IsStatic()) {
 				glm::vec3 impulse = computeImpulse(rigidB, rigidA, collisionNormal);

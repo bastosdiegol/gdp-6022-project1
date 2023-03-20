@@ -18,8 +18,10 @@ namespace physics
 		, m_AngularDamping(desc.angularDamping)
 	{
 		if (m_IsStatic || desc.mass <= 0.f) {
-			m_Mass = 0.f;
-			m_InvMass = 0.f;
+			//m_Mass = 0.f;
+			//m_InvMass = 0.f;
+			m_Mass = desc.mass;
+			m_InvMass = 1.f / m_Mass;
 			m_IsStatic = true;
 		}
 		else
