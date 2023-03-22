@@ -18,8 +18,10 @@ namespace physics
 		, m_AngularDamping(desc.angularDamping)
 	{
 		if (m_IsStatic || desc.mass <= 0.f) {
-			m_Mass = 0.f;
-			m_InvMass = 0.f;
+			//m_Mass = 0.f;
+			//m_InvMass = 0.f;
+			m_Mass = desc.mass;
+			m_InvMass = 1.f / m_Mass;
 			m_IsStatic = true;
 		}
 		else
@@ -55,6 +57,21 @@ namespace physics
 	void RigidBody::SetPosition(const Vector3& position)
 	{
 		m_Position = position;
+	}
+
+	void RigidBody::GetVelocity(Vector3& velocity)
+	{
+		velocity = m_LinearVelocity;
+	}
+
+	void RigidBody::GetRestitution(float& restitution)
+	{
+		restitution = m_Restitution;
+	}
+
+	void RigidBody::GetMass(float& mass)
+	{
+		mass = m_Mass;
 	}
 
 	void RigidBody::GetRotation(glm::quat& rotation)

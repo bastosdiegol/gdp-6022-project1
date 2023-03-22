@@ -63,9 +63,9 @@ void PhysicsSystem::UpdateStep(float duration) {
 			physObjB = m_PhysicsObjects[j];
 			shapeB = physObjB->pShape;
 
-			collision = false;
-			if(shapeA->GetType() != SHAPE_TYPE_AABB || shapeB->GetType() != SHAPE_TYPE_AABB)
-				collision = CollisionTest(physObjA->position, shapeA, physObjB->position, shapeB);
+			//collision = false;
+			//if(shapeA->GetType() != SHAPE_TYPE_AABB || shapeB->GetType() != SHAPE_TYPE_AABB)
+			collision = CollisionTest(physObjA->position, shapeA, physObjB->position, shapeB);
 
 			if (collision) {
 				if (physObjA->m_IsStatic == false)
@@ -181,7 +181,10 @@ bool PhysicsSystem::CollisionTest(const Vector3& posA, iShape* shapeA, const Vec
 	// ShapeA AABB Collision test 
 	if (shapeA->GetType() == SHAPE_TYPE_AABB)
 	{
-		if (shapeB->GetType() == SHAPE_TYPE_AABB) {}
+		if (shapeB->GetType() == SHAPE_TYPE_AABB) {
+			// TODO: Create Collision AABB AABB
+			detectedCollision = CollisionTest(posB, dynamic_cast<AABB*>(shapeB), posA, dynamic_cast<AABB*>(shapeA));
+		}
 
 		else if (shapeB->GetType() == SHAPE_TYPE_SPHERE) {
 			detectedCollision = CollisionTest(posB, dynamic_cast<Sphere*>(shapeB), posA, dynamic_cast<AABB*>(shapeA));

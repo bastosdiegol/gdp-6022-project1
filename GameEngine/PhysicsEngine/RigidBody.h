@@ -23,6 +23,10 @@ namespace physics
 		virtual void GetPosition(Vector3& position) override;
 		virtual void SetPosition(const Vector3& position) override;
 
+		virtual void GetVelocity(Vector3& velocity) override;
+		virtual void GetRestitution(float& restitution) override;
+		virtual void GetMass(float& mass) override;
+
 		virtual void GetRotation(glm::quat& rotation) override;
 		virtual void SetRotation(const glm::quat& rotation) override;
 

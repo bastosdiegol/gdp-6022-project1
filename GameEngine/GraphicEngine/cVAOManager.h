@@ -4,6 +4,7 @@
 
 #include "cModel.h"
 #include "cPlyFileReader.h"
+#include <glad/glad.h>
 
 #define LIGHT_MODEL_PATH "assets/ISO_Shphere.ply"
 

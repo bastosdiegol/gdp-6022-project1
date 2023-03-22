@@ -130,8 +130,14 @@ namespace physics
 				printf("Sphere Shpere Collision! -> Handler\n");
 				m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
 			}
+
 			if (shapeA->GetShapeType() == ShapeType::Sphere && shapeB->GetShapeType() == ShapeType::AABB) {
 				// Does Nothing
+			}
+
+			if (shapeA->GetShapeType() == ShapeType::AABB && shapeB->GetShapeType() == ShapeType::AABB) {
+				printf("AABB AABB Collision! -> Handler\n");
+				m_CollisionListener->NotifyCollision(collision.bodyA, collision.bodyB);
 			}
 		}
 

@@ -35,6 +35,8 @@ namespace physics
 		//bool CollideSphereBox(float dt, RigidBody* sphere, SphereShape* sphereShape,
 		//	RigidBody* plane, PlaneShape* planeShape);
 
+		bool CollideAABBxAABB(float dt, RigidBody* rigidA, AABBShape* shapeA, RigidBody* rigidB, AABBShape* shapeB);
+
 		void Collide(float dt, std::vector<iCollisionBody*>& bodies, std::vector<CollidingBodies>& collisions);
 
 		// Body Collisions

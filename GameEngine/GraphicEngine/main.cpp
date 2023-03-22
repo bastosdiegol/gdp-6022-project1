@@ -17,10 +17,11 @@
 #include <FModManager.h>
 #include "SoundUI.h"
 //#include "cLightHelper.h"
+#include "cMeshFactory.h"
 
 // Scene Main Loops, Globals and Functions
 #include "AnimProjOneCommons.h"
-#include "PhysicsProjOneCommons.h"
+#include "PhysicsProjTwoCommons.h"
 
 #ifdef _DEBUG
 #define DEBUG_LOG_ENABLED
@@ -46,6 +47,8 @@ FModManager* g_FModManager;
 cMeshObject* g_actor;
 // Actor Facing Direction
 glm::vec3 g_actorFacing(0.0f);
+// Mesh Factory
+cMeshFactory* g_MeshFactory;
 
 // Mouse variables
 bool g_isClicked = false;
@@ -216,7 +219,7 @@ int main(int argc, char* argv[]) {
 	GLint mProjection_location				= glGetUniformLocation(shaderID, "mProjection");
 	GLint mModelInverseTransform_location	= glGetUniformLocation(shaderID, "mModelInverseTranspose");
 
-	g_ProjectManager->LoadScene("1.Physics Proj#1");
+	g_ProjectManager->LoadScene("2.Physics Proj#2");
 
 	while (!glfwWindowShouldClose(window)) {
 
@@ -254,8 +257,8 @@ int main(int argc, char* argv[]) {
 			// Then if there's a selected Scene
 			g_ProjectManager->m_selectedScene != nullptr) {
 			// Then choose the correct game loop for the specified scene
-			if (g_ProjectManager->m_selectedScene->m_name == "1.Physics Proj#1") {
-				PhysicsProjOneGameLoop();
+			if (g_ProjectManager->m_selectedScene->m_name == "2.Physics Proj#2") {
+				PhysicsProjTwoGameLoop();
 			}
 		}
 

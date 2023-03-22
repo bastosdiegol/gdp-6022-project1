@@ -394,6 +394,137 @@ namespace physics
 	}
 
 
+	// Calculate the collision normal between two AABBs
+	glm::vec3 getCollisionNormal(glm::vec3 aabb1Center, glm::vec3 aabb2Center)
+	{
+		// Calculate the displacement vector between the centers of the two AABBs		
+		glm::vec3 displacement = aabb2Center - aabb1Center;
+
+		// Calculate the absolute value of the displacement vector
+		glm::vec3 absDisplacement = abs(displacement);
+
+		// Determine which axis has the largest displacement
+		if (absDisplacement.x > absDisplacement.y && absDisplacement.x > absDisplacement.z)
+		{
+			// Collision is along the x-axis
+			return displacement.x > 0 ? glm::vec3(1, 0, 0) : glm::vec3(-1, 0, 0);
+		}
+		else if (absDisplacement.y > absDisplacement.x && absDisplacement.y > absDisplacement.z)
+		{
+			// Collision is along the y-axis
+			return displacement.y > 0 ? glm::vec3(0, 1, 0) : glm::vec3(0, -1, 0);
+		}
+		else
+		{
+			// Collision is along the z-axis
+			return displacement.z > 0 ? glm::vec3(0, 0, 1) : glm::vec3(0, 0, -1);
+		}
+	}
+
+	// Calculate the impulse to apply to a dynamic AABB in response to a collision
+	glm::vec3 computeImpulse(RigidBody* dynamicBody, RigidBody* staticBody, const glm::vec3 & collisionNormal)
+	{
+		// Calculate the relative velocity between the two AABBs
+		Vector3 dynamicBodyVel;
+		Vector3 staticBodyVel;
+
+		dynamicBody->GetVelocity(dynamicBodyVel);
+		staticBody->GetVelocity(staticBodyVel);
+
+		glm::vec3 relativeVelocity = dynamicBodyVel.GetGLM() - staticBodyVel.GetGLM();
+
+		// Calculate the relative velocity along the collision normal
+		float velocityAlongNormal = dot(relativeVelocity, collisionNormal);
+
+		// Calculate the restitution coefficient for the collision
+		float dynamicBodyRestitution;
+		float staticBodyRestitution;
+
+		dynamicBody->GetRestitution(dynamicBodyRestitution);
+		staticBody->GetRestitution(staticBodyRestitution);
+
+		float dynamicBodyMass;
+		float staticBodyMass;
+
+		dynamicBody->GetMass(dynamicBodyMass);
+		staticBody->GetMass(staticBodyMass);
+
+		float e = (dynamicBodyRestitution + staticBodyRestitution) / 2.0f;
+
+		// Calculate the impulse scalar
+		float j = -(1 + e) * velocityAlongNormal;
+		j /= 1 / dynamicBodyMass + 1 / staticBodyMass;
+
+		// Return the impulse vector
+		return j * collisionNormal;
+	}
+
+	bool CollisionHandler::CollideAABBxAABB(float dt, RigidBody* rigidA, AABBShape* shapeA, RigidBody* rigidB, AABBShape* shapeB) {
+		//printf("Should be colliding\n");
+		bool collide = true;
+
+		Vector3 shapeAPos;
+		rigidA->GetPosition(shapeAPos);
+
+		Vector3 shapeBPos;
+		rigidB->GetPosition(shapeBPos);
+
+		glm::vec3 shapeAMin = glm::vec3(shapeA->Min[0] + shapeAPos.x,
+			shapeA->Min[1] + shapeAPos.y,
+			shapeA->Min[2] + shapeAPos.z);
+		glm::vec3 shapeAMax = glm::vec3(shapeA->Max[0] + shapeAPos.x,
+			shapeA->Max[1] + shapeAPos.y,
+			shapeA->Max[2] + shapeAPos.z);
+
+		glm::vec3 shapeBMin = glm::vec3(shapeB->Min[0] + shapeBPos.x,
+			shapeB->Min[1] + shapeBPos.y,
+			shapeB->Min[2] + shapeBPos.z);
+		glm::vec3 shapeBMax = glm::vec3(shapeB->Max[0] + shapeBPos.x,
+			shapeB->Max[1] + shapeBPos.y,
+			shapeB->Max[2] + shapeBPos.z);
+
+
+		if (shapeAMax.x < shapeBMin.x || shapeAMin.x > shapeBMax.x) {
+			printf("(shapeAMax.x < shapeBMin.x || shapeAMin.x > shapeBMax.x)\n");
+			//return false;
+			collide = false;
+		}
+
+		if (shapeAMax.y < shapeBMin.y || shapeAMin.y > shapeBMax.y) {
+			printf("(shapeAMax.y < shapeBMin.y || shapeAMin.y > shapeBMax.y)\n");
+			//return false;
+			collide = false;
+		}
+
+		if (shapeAMax.z < shapeBMin.z || shapeAMin.z > shapeBMax.z) {
+			printf("(shapeAMax.z < shapeBMin.z || shapeAMin.z > shapeBMax.z)\n");
+			//return false;
+			collide = false;
+		}
+
+		if (!collide) {
+			// Apply an impulse to the first AABB in the direction of the collision normal
+			glm::vec3 shapeACenter = (shapeAMin + shapeAMax) / 2.0f;
+			glm::vec3 shapeBCenter = (shapeBMin + shapeBMax) / 2.0f;
+			glm::vec3 collisionNormal = getCollisionNormal(shapeACenter, shapeBCenter);
+			
+			if (rigidA->IsStatic()) {
+				glm::vec3 impulse = computeImpulse(rigidB, rigidA, collisionNormal);
+				rigidB->ApplyImpulse(impulse);
+			}
+			else {
+				glm::vec3 impulse = computeImpulse(rigidA, rigidB, collisionNormal);
+				rigidA->ApplyImpulse(impulse);
+			}
+			
+			//glm::vec3 impulse = computeImpulse(rigidBody[i], rigidBody[j], collisionNormal);
+			//rigidBody[i].applyImpulse(impulse);
+			return collide;
+		}
+
+		return collide;
+	}
+
 	void CollisionHandler::Collide(float dt, std::vector<iCollisionBody*>& bodies, std::vector<CollidingBodies>& collisions)
 	{
 		int bodyCount = bodies.size();
@@ -496,6 +627,13 @@ namespace physics
 			else
 			{
 				// We don't have this handled at the moment.
+			}
+		}
+		else if (shapeA->GetShapeType() == ShapeType::AABB)
+		{
+			if (shapeB->GetShapeType() == ShapeType::AABB)
+			{
+				collision = CollideAABBxAABB(dt, rigidA, AABBShape::Cast(shapeA), rigidB, AABBShape::Cast(shapeB));
 			}
 		}
 		else

@@ -24,37 +24,42 @@ extern glm::vec3* g_cameraTarget;
 extern cMeshObject* g_actor;
 extern glm::vec3 g_actorFacing;
 extern FModManager* g_FModManager;
+extern cMeshFactory* g_MeshFactory;
 
 physics::iPhysicsFactory* physicsFactory;
 physics::iPhysicsWorld* world;
 physics::iCollisionListener* collisionListener;
 
-void PhysicsProjOneStartingUp();
-void PhysicsProjOneNewGame();
-void PhysicsProjOneRunning();
-void PhysicsProjOneShutdown();
+void PhysicsProjTwoStartingUp();
+void PhysicsProjTwoNewGame();
+void PhysicsProjTwoRunning();
+void PhysicsProjTwoShutdown();
 
 physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, Vector3 position, Vector3 linearVelocity);
 void setMeshObjectAsStaticPhysObjectAABB(std::string name);
+void setMeshObjectAsPhysObjectAABB(cMeshObject* obj);
 
-void PhysicsProjOneGameLoop() {
+void PhysicsProjTwoGameLoop() {
 	switch (g_ProjectManager->m_GameLoopState) {
 	case GameState::STARTING_UP:
-		PhysicsProjOneStartingUp();
+		PhysicsProjTwoStartingUp();
 		break;
 	case GameState::NEW_GAME:
-		PhysicsProjOneNewGame();
+		PhysicsProjTwoNewGame();
 		break;
 	case GameState::RUNNING:
-		PhysicsProjOneRunning();
+		PhysicsProjTwoRunning();
 		break;
 	case GameState::SHUTING_DOWN:
-		PhysicsProjOneShutdown();
+		PhysicsProjTwoShutdown();
 		break;
 	}
 }
 
-void PhysicsProjOneStartingUp() {
+void PhysicsProjTwoStartingUp() {
+	// Initialize the Mesh Facoty
+	g_MeshFactory = new cMeshFactory(g_ProjectManager->m_VAOManager, g_ProjectManager->m_selectedScene->m_mMeshes);
+
 	// Initialize a Physics Factory
 	physicsFactory = new physics::PhysicsFactory();
 
@@ -90,14 +95,21 @@ void PhysicsProjOneStartingUp() {
 	// Create a AABB Plane
 	setMeshObjectAsStaticPhysObjectAABB("Plane");
 
+	// Create a AABB Cube
+	cMeshObject* newCube = g_MeshFactory->createCubeMesh("Cube1");
+	newCube->m_position = glm::vec3(18.f, 20.f, 5.f);
+	newCube->m_bUse_RGBA_colour = true;
+	newCube->m_RGBA_colour = glm::vec4(1.f, 0.f, 1.f, 1.f);
+	//setMeshObjectAsPhysObjectAABB(newCube);
+
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
 }
 
-void PhysicsProjOneNewGame() {
+void PhysicsProjTwoNewGame() {
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
 }
 
-void PhysicsProjOneRunning() {
+void PhysicsProjTwoRunning() {
 	// *********
 	// MAIN LOOP
 	// *********	
@@ -111,7 +123,7 @@ void PhysicsProjOneRunning() {
 
 }
 
-void PhysicsProjOneShutdown() {
+void PhysicsProjTwoShutdown() {
 	// Closing the Application
 	glfwSetWindowShouldClose(window, true);
 	// Deletes thigs
@@ -144,6 +156,23 @@ void setMeshObjectAsStaticPhysObjectAABB(std::string name) {
 	physics::iShape* theAABBShape = new physics::AABBShape(min, max, Vector3(0.f, 1.f, 0.f));
 
 	// Adds the AABB to the Physics World
-	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 0.f, theMesh->m_position, glm::vec3(0.f));
+	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 1.f, theMesh->m_position, glm::vec3(0.f));
 	world->AddBody(physicsFactory->CreateRigidBody(AABBDesc, theAABBShape));
+}
+
+// Creates a Description for a AABB and adds it to the World
+void setMeshObjectAsPhysObjectAABB(cMeshObject* obj) {
+	// Creates the AABB structure for the mesh
+	float min[3] = { obj->m_parentModel->min_x,
+					 obj->m_parentModel->min_y,
+					 obj->m_parentModel->min_z };
+	float max[3] = { obj->m_parentModel->max_x,
+					 obj->m_parentModel->max_y,
+					 obj->m_parentModel->max_z };
+	physics::iShape* theAABBShape = new physics::AABBShape(min, max, Vector3(0.f, 1.f, 0.f));
+
+	// Adds the AABB to the Physics World
+	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(false, obj->m_scale.x, obj->m_position, glm::vec3(0.f));
+	obj->physicsBody = physicsFactory->CreateRigidBody(AABBDesc, theAABBShape);
+	world->AddBody(obj->physicsBody);
 }
