@@ -3,6 +3,7 @@
 #include "RigidBody.h"
 
 #include <glm/gtx/projection.hpp>
+#include <algorithm>
 
 
 namespace physics
@@ -395,30 +396,29 @@ namespace physics
 
 
 	// Calculate the collision normal between two AABBs
-	glm::vec3 getCollisionNormal(glm::vec3 aabb1Center, glm::vec3 aabb2Center)
+	glm::vec3 getCollisionNormal(glm::vec3 aabb1Center, glm::vec3 aabb2Center, glm::vec3 extentsA, glm::vec3 extentsB)
 	{
-		// Calculate the displacement vector between the centers of the two AABBs		
-		glm::vec3 displacement = aabb2Center - aabb1Center;
+		// Calculate the vector from centerA to centerB
+		glm::vec3 centerDiff = aabb2Center - aabb1Center;
 
-		// Calculate the absolute value of the displacement vector
-		glm::vec3 absDisplacement = abs(displacement);
+		// Calculate the overlap in each dimension
+		float overlapX = extentsA.x + extentsB.x - std::abs(centerDiff.x);
+		float overlapY = extentsA.y + extentsB.y - std::abs(centerDiff.y);
+		float overlapZ = extentsA.z + extentsB.z - std::abs(centerDiff.z);
 
-		// Determine which axis has the largest displacement
-		if (absDisplacement.x > absDisplacement.y && absDisplacement.x > absDisplacement.z)
-		{
-			// Collision is along the x-axis
-			return displacement.x > 0 ? glm::vec3(1, 0, 0) : glm::vec3(-1, 0, 0);
+		// Determine the axis with the smallest overlap
+		glm::vec3 collisionNormal;
+		float minOverlap = std::min({ overlapX, overlapY, overlapZ });
+
+		if (minOverlap == overlapX) {
+			collisionNormal = glm::vec3(std::copysign(1.0f, centerDiff.x), 0.0f, 0.0f);
+		} else if (minOverlap == overlapY) {
+			collisionNormal = glm::vec3(0.0f, std::copysign(1.0f, centerDiff.y), 0.0f);
+		} else {
+			collisionNormal = glm::vec3(0.0f, 0.0f, std::copysign(1.0f, centerDiff.z));
 		}
-		else if (absDisplacement.y > absDisplacement.x && absDisplacement.y > absDisplacement.z)
-		{
-			// Collision is along the y-axis
-			return displacement.y > 0 ? glm::vec3(0, 1, 0) : glm::vec3(0, -1, 0);
-		}
-		else
-		{
-			// Collision is along the z-axis
-			return displacement.z > 0 ? glm::vec3(0, 0, 1) : glm::vec3(0, 0, -1);
-		}
+
+		return collisionNormal;
 	}
 
 	// Calculate the impulse to apply to a dynamic AABB in response to a collision
@@ -502,17 +502,23 @@ namespace physics
 			collide = false;
 		}
 
-		if (!collide) {
+		if (collide) {
 			// Apply an impulse to the first AABB in the direction of the collision normal
 			glm::vec3 shapeACenter = (shapeAMin + shapeAMax) / 2.0f;
 			glm::vec3 shapeBCenter = (shapeBMin + shapeBMax) / 2.0f;
-			glm::vec3 collisionNormal = getCollisionNormal(shapeACenter, shapeBCenter);
-			
+
+			// Calculate the half extents of each AABB
+			glm::vec3 extentsA = (shapeAMax - shapeAMin) / 2.0f;
+			glm::vec3 extentsB = (shapeBMax - shapeBMin) / 2.0f;
+
+			glm::vec3 collisionNormal = getCollisionNormal(shapeACenter, shapeBCenter, extentsA, extentsB);
+			//glm::vec3 collisionNormal = glm::vec3(0.0f, 1.5f, 0.0f);
+
 			if (rigidA->IsStatic()) {
 				glm::vec3 impulse = computeImpulse(rigidB, rigidA, collisionNormal);
 				rigidB->ApplyImpulse(impulse);
 			}
-			else {
+			else if (rigidB->IsStatic()){
 				glm::vec3 impulse = computeImpulse(rigidA, rigidB, collisionNormal);
 				rigidA->ApplyImpulse(impulse);
 			}
@@ -634,6 +640,9 @@ namespace physics
 			if (shapeB->GetShapeType() == ShapeType::AABB)
 			{
 				collision = CollideAABBxAABB(dt, rigidA, AABBShape::Cast(shapeA), rigidB, AABBShape::Cast(shapeB));
+			}
+			else if (shapeB->GetShapeType() == ShapeType::Sphere) {
+				collision = CollideSphereAABB(dt, rigidB, SphereShape::Cast(shapeB), rigidA, AABBShape::Cast(shapeA));
 			}
 		}
 		else

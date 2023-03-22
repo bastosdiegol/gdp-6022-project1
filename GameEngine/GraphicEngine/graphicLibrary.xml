@@ -17,7 +17,7 @@
 		</model>
 		<model path="assets/ISO_Shphere.ply" title="Player">
 			<mesh id="Player">
-				<position x="15" y="10" z="15" />
+				<position x="32" y="5" z="32" />
 				<rotate x="0" y="0" z="0" />
 				<useColor value="true" />
 				<color r="0.82745" g="0.82745" b="0.82745" a="1" />
