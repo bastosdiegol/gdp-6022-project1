@@ -233,6 +233,12 @@
     <ClInclude Include="CTextureFromBMP.h">
       <Filter>Header Files\textures</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="PhysicsProjTwoCommons.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+>>>>>>> main
     <ClInclude Include="cEnemyTypeA.h">
       <Filter>Header Files\ai</Filter>
     </ClInclude>
@@ -254,9 +260,12 @@
     <ClInclude Include="cMeshFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="PhysicsProjTwoCommons.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+=======
+>>>>>>> main
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\fragmentShader01.glsl">

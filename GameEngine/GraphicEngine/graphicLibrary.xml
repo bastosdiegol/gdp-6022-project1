@@ -17,10 +17,11 @@
 		</model>
 		<model path="assets/ISO_Shphere.ply" title="Player">
 			<mesh id="Player">
-				<position x="32" y="5" z="32" />
+				<position x="15" y="10" z="15" />
 				<rotate x="0" y="0" z="0" />
 				<useColor value="true" />
 				<color r="0.82745" g="0.82745" b="0.82745" a="1" />
+<<<<<<< HEAD
 				<scale value="2" />
 				<isWireframe value="false" />
 				<doNotLight value="false" />
@@ -81,6 +82,11 @@
 				<scale value="4" />
 				<isWireframe value="false" />
 				<doNotLight value="false" />
+=======
+				<scale value="1" />
+				<isWireframe value="false" />
+				<doNotLight value="false" />
+>>>>>>> main
 				<visible value="true" />
 				<boundingBox value="false" />
 			</mesh>

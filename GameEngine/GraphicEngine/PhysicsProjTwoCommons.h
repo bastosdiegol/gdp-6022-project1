@@ -29,6 +29,7 @@ extern cMeshFactory* g_MeshFactory;
 physics::iPhysicsFactory* physicsFactory;
 physics::iPhysicsWorld* world;
 physics::iCollisionListener* collisionListener;
+unsigned int yPosition = 10;
 
 void PhysicsProjTwoStartingUp();
 void PhysicsProjTwoNewGame();
@@ -57,15 +58,20 @@ void PhysicsProjTwoGameLoop() {
 }
 
 void PhysicsProjTwoStartingUp() {
+<<<<<<< HEAD
 	// Initialize the Mesh Facoty
 	g_MeshFactory = new cMeshFactory(g_ProjectManager->m_VAOManager, g_ProjectManager->m_selectedScene->m_mMeshes);
 
+=======
+>>>>>>> main
 	// Initialize a Physics Factory
 	physicsFactory = new physics::PhysicsFactory();
+	// Initialize the Mesh Facoty
+	g_MeshFactory = new cMeshFactory(g_ProjectManager->m_VAOManager, g_ProjectManager->m_selectedScene->m_mMeshes);
 
 	// Create Physics World
 	world = physicsFactory->CreateWorld();
-	world->SetGravity(Vector3(0.0f, -1.f, 0.0f));
+	world->SetGravity(Vector3(0.0f, -0.98f, 0.0f));
 
 	// Create CollisionListener
 	collisionListener = physicsFactory->CreateCollisionListener();
@@ -77,20 +83,10 @@ void PhysicsProjTwoStartingUp() {
 	// Adjust main actor facing direction
 	g_actorFacing.x = sin(g_actor->m_rotation.y);
 	g_actorFacing.z = cos(g_actor->m_rotation.y);
-	physics::iShape* playerBallShape = new physics::SphereShape(2.0f);
-	physics::RigidBodyDesc PlayerDesc = createRigidBodyDesc(false, 2.f, g_actor->m_position, glm::vec3(0.f));
+	physics::iShape* playerBallShape = new physics::SphereShape(1.0f);
+	physics::RigidBodyDesc PlayerDesc = createRigidBodyDesc(false, 1.f, g_actor->m_position, glm::vec3(0.f));
 	g_actor->physicsBody = physicsFactory->CreateRigidBody(PlayerDesc, playerBallShape);
 	world->AddBody(g_actor->physicsBody);
-
-	// Creates all 5 Balls
-	for (int i = 1; i <= 5; i++) {
-		cMeshObject* newPhysicsBall = g_ProjectManager->m_selectedScene->m_mMeshes.find("Ball" + std::to_string(i))->second;
-		// Create a ball 
-		physics::iShape* ballShape = new physics::SphereShape(newPhysicsBall->m_scale.x);
-		physics::RigidBodyDesc ballDesc = createRigidBodyDesc(false, newPhysicsBall->m_scale.x, newPhysicsBall->m_position, glm::vec3(0.f));
-		newPhysicsBall->physicsBody = physicsFactory->CreateRigidBody(ballDesc, ballShape);
-		world->AddBody(newPhysicsBall->physicsBody);
-	}
 
 	// Create a AABB Plane
 	setMeshObjectAsStaticPhysObjectAABB("Plane");
@@ -107,6 +103,7 @@ void PhysicsProjTwoStartingUp() {
 
 void PhysicsProjTwoNewGame() {
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
+
 }
 
 void PhysicsProjTwoRunning() {
@@ -120,6 +117,18 @@ void PhysicsProjTwoRunning() {
 		// FMOD sounds for Sphere Sphere Collision
 		g_FModManager->playSound("Hit", "ch2 fx");
 	}
+
+	// Factory Test
+	//if (yPosition % 55 == 0) {
+		cMeshObject* newCube = g_MeshFactory->createCubeMesh();
+		newCube->m_position = glm::vec3(16.f, yPosition, 16.f);
+		newCube->m_meshName = "Cube" + std::to_string(yPosition);
+		newCube->m_bUse_RGBA_colour = true;
+		newCube->m_RGBA_colour = glm::vec4(1.f, 0.f, 1.f, 1.f);
+		g_ProjectManager->m_selectedScene->m_mMeshes.try_emplace(newCube->m_meshName, newCube);
+		setMeshObjectAsPhysObjectAABB(newCube);
+	//}
+	//yPosition++;
 
 }
 
