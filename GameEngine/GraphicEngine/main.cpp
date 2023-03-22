@@ -21,10 +21,6 @@
 #include "cMeshFactory.h"
 
 // Scene Main Loops, Globals and Functions
-<<<<<<< HEAD
-#include "AnimProjOneCommons.h"
-=======
->>>>>>> main
 #include "PhysicsProjTwoCommons.h"
 
 #ifdef _DEBUG

@@ -58,12 +58,9 @@ void PhysicsProjTwoGameLoop() {
 }
 
 void PhysicsProjTwoStartingUp() {
-<<<<<<< HEAD
 	// Initialize the Mesh Facoty
 	g_MeshFactory = new cMeshFactory(g_ProjectManager->m_VAOManager, g_ProjectManager->m_selectedScene->m_mMeshes);
 
-=======
->>>>>>> main
 	// Initialize a Physics Factory
 	physicsFactory = new physics::PhysicsFactory();
 	// Initialize the Mesh Facoty
