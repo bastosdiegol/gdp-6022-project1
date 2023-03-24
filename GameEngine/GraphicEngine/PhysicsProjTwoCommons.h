@@ -63,16 +63,27 @@ void PhysicsProjTwoStartingUp() {
 	g_PhysicsFactory = new PhysicsFactoryType();
 	// Create Physics World
 	g_PhysicsWorld = g_PhysicsFactory->CreateWorld();
-	//world = physicsFactory->CreateWorld();
-	//world->SetGravity(Vector3(0.0f, -0.98f, 0.0f));
+	// Set Gravity
+	g_PhysicsWorld->SetGravity(glm::vec3(0, -9.81, 0));
 
 	// Create CollisionListener
 	//collisionListener = physicsFactory->CreateCollisionListener();
 	// Register it to the World
 	//world->RegisterCollisionListener(collisionListener);
 
+	// Create a Plane
+	cMeshObject* thePlane = g_ProjectManager->m_selectedScene->m_mMeshes.find("Plane")->second;
+	physics::iShape* planeShape = new physics::PlaneShape(0.0f, glm::vec3(0.f, 1.f, 0.f));
+	physics::RigidBodyDesc desc;
+	desc.isStatic = true;
+	desc.mass = 0;
+	desc.position = glm::vec3(0.f);
+	desc.linearVelocity = glm::vec3(0.f);
+	thePlane->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, planeShape);
+	g_PhysicsWorld->AddBody(thePlane->physicsBody);
+
 	// Create a AABB Plane
-	setMeshObjectAsStaticPhysObjectAABB("Plane");
+	//setMeshObjectAsStaticPhysObjectAABB("Plane");
 
 	// Create a AABB Cube
 	cMeshObject* newCube = g_MeshFactory->createCubeMesh("Cube1");
@@ -83,6 +94,15 @@ void PhysicsProjTwoStartingUp() {
 
 	// Sets main actor
 	g_actor = g_ProjectManager->m_selectedScene->m_mMeshes.find("Player")->second;
+	physics::iShape* ballShape = new physics::SphereShape(g_actor->m_scale.x);
+	desc.isStatic = false;
+	desc.mass = 1.f;
+	desc.position = g_actor->m_position;
+	desc.linearVelocity = glm::vec3(0.f);
+	g_actor->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, ballShape);
+	g_PhysicsWorld->AddBody(g_actor->physicsBody);
+
+
 	// Adjust main actor facing direction
 	//g_actorFacing.x = sin(g_actor->m_rotation.y);
 	//g_actorFacing.z = cos(g_actor->m_rotation.y);
@@ -113,8 +133,9 @@ void PhysicsProjTwoRunning() {
 	// *********
 	// MAIN LOOP
 	// *********	
+	g_PhysicsWorld->TimeStep(0.1f);
 	//world->TimeStep(0.1f);
-	//g_ProjectManager->Step();
+	g_ProjectManager->Step();
 	//
 	//while (collisionListener->AccountForCollision()) {
 	//	// FMOD sounds for Sphere Sphere Collision
