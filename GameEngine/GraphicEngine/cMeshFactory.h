@@ -9,10 +9,12 @@ public:
 
 	cMeshObject* createCubeMesh(std::string name);
 	cMeshObject* createSphereMesh(std::string name);
+	cMeshObject* createCylinderMesh(std::string name);
 private:
 	std::map<std::string, cMeshObject*>& m_sceneMeshes;
 
 	cModel* m_cube;
 	cModel* m_sphere;
+	cModel* m_cylinder;
 };
 

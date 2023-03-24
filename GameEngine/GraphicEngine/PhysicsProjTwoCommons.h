@@ -4,6 +4,7 @@
 #include <SphereShape.h>
 #include <PlaneShape.h>
 #include <AABBShape.h>
+#include <CylinderShape.h>
 #include <myMath.h>
 
 #ifdef _DEBUG
@@ -38,6 +39,10 @@ void PhysicsProjTwoNewGame();
 void PhysicsProjTwoRunning();
 void PhysicsProjTwoShutdown();
 float RandFloat(float min, float max);
+/// <summary>
+/// Creates a Mesh Sphere with Random Size
+/// And adds it to the PhysicsWorld
+/// </summary>
 void GenerateSphere();
 
 void PhysicsProjTwoGameLoop() {
@@ -86,23 +91,20 @@ void PhysicsProjTwoStartingUp() {
 
 	// Create a AABB BoxPlane
 	cMeshObject* thePlane = g_ProjectManager->m_selectedScene->m_mMeshes.find("Plane")->second;
-	// Creates the AABB structure for the mesh
-	float min[3] = { thePlane->m_parentModel->min_x,
-					 thePlane->m_parentModel->min_y,
-					 thePlane->m_parentModel->min_z };
-	float max[3] = { thePlane->m_parentModel->max_x,
-					 thePlane->m_parentModel->max_y,
-					 thePlane->m_parentModel->max_z };
-	glm::vec3 aabbHalfExtends = glm::vec3((max[0] - min[0]) * thePlane->m_scale.x / 2.0f,
-										  (max[1] - min[1]) * thePlane->m_scale.y / 2.0f,
-										  (max[2] - min[2]) * thePlane->m_scale.z / 2.0f);
-	physics::iShape* planeShape = new physics::BoxShape(aabbHalfExtends);
+	// Calculates the Half Extents
+	glm::vec3 aabbHalfExtents = glm::vec3((thePlane->m_parentModel->max_x - thePlane->m_parentModel->min_x) * thePlane->m_scale.x / 2.0f,
+										  (thePlane->m_parentModel->max_y - thePlane->m_parentModel->min_y) * thePlane->m_scale.y / 2.0f,
+										  (thePlane->m_parentModel->max_z - thePlane->m_parentModel->min_z) * thePlane->m_scale.z / 2.0f);
+	// Creates the Shape and Description
+	physics::iShape* planeShape = new physics::BoxShape(aabbHalfExtents);
 	physics::RigidBodyDesc desc;
 	desc.isStatic = true;
 	desc.mass = 0;
 	desc.position = thePlane->m_position;
 	desc.linearVelocity = glm::vec3(0.f);
+	// Creates the RigidBody
 	thePlane->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, planeShape);
+	// Adds the RigidBody to the World
 	g_PhysicsWorld->AddBody(thePlane->physicsBody);
 
 	// Create a Cube Wall
@@ -110,22 +112,26 @@ void PhysicsProjTwoStartingUp() {
 	glm::vec3 wallPosition(-13.0f, 1.0f, 8.0f);
 	for (int line = 0; line < 6; line++) {
 		for (int column = 0; column < 10; column++) {
+			// Creates the Mesh
 			cMeshObject* newCube = g_MeshFactory->createCubeMesh("Cube["+std::to_string(line)+","+std::to_string(column) + "]");
 			newCube->m_position = wallPosition;
 			newCube->defineInitialPosition();
 			wallPosition.x += 1.0f;
 			newCube->m_bUse_RGBA_colour = true;
 			newCube->m_RGBA_colour = glm::vec4(1.f, 0.f, 1.f, 1.f);
-			// Creates the AABB structure for the mesh
-			aabbHalfExtends = glm::vec3((newCube->m_parentModel->max_x - newCube->m_parentModel->min_x) * newCube->m_scale.x / 2.0f,
+			// Calculates the Half Extents
+			aabbHalfExtents = glm::vec3((newCube->m_parentModel->max_x - newCube->m_parentModel->min_x) * newCube->m_scale.x / 2.0f,
 										(newCube->m_parentModel->max_y - newCube->m_parentModel->min_y) * newCube->m_scale.y / 2.0f,
 										(newCube->m_parentModel->max_z - newCube->m_parentModel->min_z) * newCube->m_scale.z / 2.0f);
-			physics::iShape* boxShape = new physics::BoxShape(aabbHalfExtends);
+			// Creates the Shape and Description
+			physics::iShape* boxShape = new physics::BoxShape(aabbHalfExtents);
 			desc.isStatic = false;
 			desc.mass = 0.5;
 			desc.position = newCube->m_position;
 			desc.linearVelocity = glm::vec3(0.f);
+			// Creates the RigidBody
 			newCube->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, boxShape);
+			// Adds the RigidBody to the World
 			g_PhysicsWorld->AddBody(newCube->physicsBody);
 		}
 		wallPosition.x = -13.f;
@@ -135,6 +141,7 @@ void PhysicsProjTwoStartingUp() {
 	// Create a couple of static boxes
 	int numOfStaticBoxes = 8;
 	for (int i = 0; i < numOfStaticBoxes; i++) {
+		// Creates the Mesh
 		cMeshObject* newCube = g_MeshFactory->createCubeMesh("StaticBox[" + std::to_string(i) + "]");
 		newCube->m_scale = glm::vec3(RandFloat(MIN_SCALE, MAX_SCALE));
 		newCube->m_position = glm::vec3(RandFloat(-16.0f + newCube->m_scale.x, 0.0f), 
@@ -143,18 +150,58 @@ void PhysicsProjTwoStartingUp() {
 		newCube->defineInitialPosition();
 		newCube->m_bUse_RGBA_colour = true;
 		newCube->m_RGBA_colour = glm::vec4(0.f, 0.f, 0.5f, 1.f);
-		// Creates the AABB structure for the mesh
-		aabbHalfExtends = glm::vec3((newCube->m_parentModel->max_x - newCube->m_parentModel->min_x) * newCube->m_scale.x / 2.0f,
+		// Calculates the Half Extents
+		aabbHalfExtents = glm::vec3((newCube->m_parentModel->max_x - newCube->m_parentModel->min_x) * newCube->m_scale.x / 2.0f,
 			                        (newCube->m_parentModel->max_y - newCube->m_parentModel->min_y) * newCube->m_scale.y / 2.0f,
 			                        (newCube->m_parentModel->max_z - newCube->m_parentModel->min_z) * newCube->m_scale.z / 2.0f);
-		physics::iShape* boxShape = new physics::BoxShape(aabbHalfExtends);
-		physics::RigidBodyDesc desc;
+		// Creates the Shape and Description
+		physics::iShape* boxShape = new physics::BoxShape(aabbHalfExtents);
 		desc.isStatic = true;
 		desc.mass = 0;
 		desc.position = newCube->m_position;
 		desc.linearVelocity = glm::vec3(0.f);
+		// Creates the RigidBody
 		newCube->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, boxShape);
+		// Adds the RigidBody to the World
 		g_PhysicsWorld->AddBody(newCube->physicsBody);
+	}
+
+	// Creates cylinders to act as a bowling pins
+	// Number of rows for disposition of pins
+	int numRows = 4;
+	// Pin Initial Position
+	glm::vec3 pinPosition(5.0f, 1.0f, -8.0f);
+	// Default spacing between pins
+	float spacing = 2.0f;
+	// Loop through each row and column and create each pin
+	for (int row = 0; row < numRows; row++) {
+
+		// Adjust the starting position of the pin in each row
+		int numPinsInRow = row + 1;
+		// Adjust the starting position of the pin in each row
+		glm::vec3 rowStartPosition = pinPosition - glm::vec3((numPinsInRow - 1) * spacing / 2.0f, 0.f, 0.f) + glm::vec3(row * spacing / 2.0f, 0.f, 0.f);
+		for (int column = 0; column < numPinsInRow; column++) {
+			// Creates the Mesh
+			cMeshObject* newCylinder = g_MeshFactory->createCylinderMesh("Pin[" + std::to_string(row) + "," + std::to_string(column) + "]");
+			newCylinder->m_position = rowStartPosition + glm::vec3(column * spacing, 0.f, row * spacing);
+			newCylinder->defineInitialPosition();
+			newCylinder->m_bUse_RGBA_colour = true;
+			newCylinder->m_RGBA_colour = glm::vec4(0.6f, 0.4f, 0.2f, 1.f);
+			// Calculates the Half Extents
+			aabbHalfExtents = glm::vec3((newCylinder->m_parentModel->max_x - newCylinder->m_parentModel->min_x) * newCylinder->m_scale.x / 2.0f,
+										(newCylinder->m_parentModel->max_y - newCylinder->m_parentModel->min_y) * newCylinder->m_scale.y / 2.0f,
+										(newCylinder->m_parentModel->max_z - newCylinder->m_parentModel->min_z) * newCylinder->m_scale.z / 2.0f);
+			// Creates the Shape and Description
+			physics::iShape* boxShape = new physics::CylinderShape(aabbHalfExtents);
+			desc.isStatic = false;
+			desc.mass = 0.5;
+			desc.position = newCylinder->m_position;
+			desc.linearVelocity = glm::vec3(0.f);
+			// Creates the RigidBody
+			newCylinder->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, boxShape);
+			// Adds the RigidBody to the World
+			g_PhysicsWorld->AddBody(newCylinder->physicsBody);
+		}
 	}
 
 	// Sets main actor
@@ -164,12 +211,15 @@ void PhysicsProjTwoStartingUp() {
 	g_actor->m_scale = glm::vec3(1.0f);
 	g_actor->m_bUse_RGBA_colour = true;
 	g_actor->m_RGBA_colour = glm::vec4(0.f, 1.f, 0.f, 1.f);
+	// Creates the Shape and Description
 	physics::iShape* ballShape = new physics::SphereShape(g_actor->m_scale.x);
 	desc.isStatic = false;
 	desc.mass = g_actor->m_scale.x;
 	desc.position = g_actor->m_position;
 	desc.linearVelocity = glm::vec3(0.f);
+	// Creates the RigidBody
 	g_actor->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, ballShape);
+	// Adds the RigidBody to the World
 	g_PhysicsWorld->AddBody(g_actor->physicsBody);
 
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
@@ -236,6 +286,7 @@ float RandFloat(float min, float max) {
 }
 
 void GenerateSphere() {
+	// Creates the Mesh
 	cMeshObject* newSphere = g_MeshFactory->createSphereMesh("Sphere[" + std::to_string(g_numOfSpheres) + "]");
 	g_numOfSpheres++;
 	newSphere->m_scale = glm::vec3(RandFloat(MIN_SCALE, MAX_SCALE));
@@ -245,12 +296,15 @@ void GenerateSphere() {
 	newSphere->defineInitialPosition();
 	newSphere->m_bUse_RGBA_colour = true;
 	newSphere->m_RGBA_colour = glm::vec4(0.2f, 0.4f, 0.6f, 1.f);
+	// Creates the Shape and Description
 	physics::iShape* ballShape = new physics::SphereShape(newSphere->m_scale.x * 0.5);
 	physics::RigidBodyDesc desc;
 	desc.isStatic = false;
 	desc.mass = newSphere->m_scale.x;
 	desc.position = newSphere->m_position;
 	desc.linearVelocity = glm::vec3(0.f);
+	// Creates the RigidBody
 	newSphere->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, ballShape);
+	// Adds the RigidBody to the World
 	g_PhysicsWorld->AddBody(newSphere->physicsBody);
 }

@@ -8,6 +8,9 @@ cMeshFactory::cMeshFactory(cVAOManager* vaoManager, std::map<std::string, cMeshO
 	
 	this->m_sphere = vaoManager->PrepareNewModel("ball1d", "assets/mesh_factory/ball1d.ply");
 	vaoManager->LoadModelIntoVAO(this->m_sphere);
+
+	this->m_cylinder = vaoManager->PrepareNewModel("cylinder1x3x1", "assets/mesh_factory/cylinder1x3x1.ply");
+	vaoManager->LoadModelIntoVAO(this->m_cylinder);
 }
 
 cMeshFactory::~cMeshFactory() {
@@ -25,4 +28,11 @@ cMeshObject* cMeshFactory::createSphereMesh(std::string name) {
 	newSphere->m_meshName = name;
 	this->m_sceneMeshes.try_emplace(name, newSphere);
 	return newSphere;
+}
+
+cMeshObject* cMeshFactory::createCylinderMesh(std::string name) {
+	cMeshObject* newCynlinder = new cMeshObject(m_cylinder);
+	newCynlinder->m_meshName = name;
+	this->m_sceneMeshes.try_emplace(name, newCynlinder);
+	return newCynlinder;
 }
