@@ -3,6 +3,7 @@
 
 #include <SphereShape.h>
 #include <PlaneShape.h>
+#include <AABBShape.h>
 #include <myMath.h>
 
 #ifdef _DEBUG
@@ -72,18 +73,36 @@ void PhysicsProjTwoStartingUp() {
 	//world->RegisterCollisionListener(collisionListener);
 
 	// Create a Plane
+	//cMeshObject* thePlane = g_ProjectManager->m_selectedScene->m_mMeshes.find("Plane")->second;
+	//physics::iShape* planeShape = new physics::PlaneShape(0.0f, glm::vec3(0.f, 1.f, 0.f));
+	//physics::RigidBodyDesc desc;
+	//desc.isStatic = true;
+	//desc.mass = 0;
+	//desc.position = glm::vec3(0.f);
+	//desc.linearVelocity = glm::vec3(0.f);
+	//thePlane->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, planeShape);
+	//g_PhysicsWorld->AddBody(thePlane->physicsBody);
+
+	// Create a AABB Plane
 	cMeshObject* thePlane = g_ProjectManager->m_selectedScene->m_mMeshes.find("Plane")->second;
-	physics::iShape* planeShape = new physics::PlaneShape(0.0f, glm::vec3(0.f, 1.f, 0.f));
+	// Creates the AABB structure for the mesh
+	float min[3] = { thePlane->m_parentModel->min_x,
+					 thePlane->m_parentModel->min_y,
+					 thePlane->m_parentModel->min_z };
+	float max[3] = { thePlane->m_parentModel->max_x,
+					 thePlane->m_parentModel->max_y,
+					 thePlane->m_parentModel->max_z };
+	glm::vec3 aabbHalfExtends = glm::vec3((max[0] - min[0]) / 2.0f,
+										  (max[1] - min[1]) / 2.0f,
+										  (max[2] - min[2]) / 2.0f);
+	physics::iShape* planeShape = new physics::BoxShape(aabbHalfExtends);
 	physics::RigidBodyDesc desc;
 	desc.isStatic = true;
 	desc.mass = 0;
-	desc.position = glm::vec3(0.f);
+	desc.position = thePlane->m_position;
 	desc.linearVelocity = glm::vec3(0.f);
 	thePlane->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, planeShape);
 	g_PhysicsWorld->AddBody(thePlane->physicsBody);
-
-	// Create a AABB Plane
-	//setMeshObjectAsStaticPhysObjectAABB("Plane");
 
 	// Create a AABB Cube
 	cMeshObject* newCube = g_MeshFactory->createCubeMesh("Cube1");
@@ -164,21 +183,21 @@ physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, physics::V
 
 // Creates a Description for a AABB and adds it to the World
 void setMeshObjectAsStaticPhysObjectAABB(std::string name) {
-	cMeshObject* theMesh;
-	// Links the MeshObject to the AABB PhysicsObject
-	theMesh = g_ProjectManager->m_selectedScene->m_mMeshes.find(name)->second;
-	// Creates the AABB structure for the mesh
-	float min[3] = { theMesh->m_parentModel->min_x,
-					 theMesh->m_parentModel->min_y,
-					 theMesh->m_parentModel->min_z };
-	float max[3] = { theMesh->m_parentModel->max_x,
-					 theMesh->m_parentModel->max_y,
-					 theMesh->m_parentModel->max_z };
-	physics::iShape* theAABBShape = new physics::AABBShape(min, max, Vector3(0.f, 1.f, 0.f));
-	
-	// Adds the AABB to the Physics World
-	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 1.f, theMesh->m_position, glm::vec3(0.f));
-	world->AddBody(physicsFactory->CreateRigidBody(AABBDesc, theAABBShape));
+	//cMeshObject* theMesh;
+	//// Links the MeshObject to the AABB PhysicsObject
+	//theMesh = g_ProjectManager->m_selectedScene->m_mMeshes.find(name)->second;
+	//// Creates the AABB structure for the mesh
+	//float min[3] = { theMesh->m_parentModel->min_x,
+	//				 theMesh->m_parentModel->min_y,
+	//				 theMesh->m_parentModel->min_z };
+	//float max[3] = { theMesh->m_parentModel->max_x,
+	//				 theMesh->m_parentModel->max_y,
+	//				 theMesh->m_parentModel->max_z };
+	//physics::iShape* theAABBShape = new physics::AABBShape(min, max, Vector3(0.f, 1.f, 0.f));
+	//
+	//// Adds the AABB to the Physics World
+	//physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 1.f, theMesh->m_position, glm::vec3(0.f));
+	//world->AddBody(physicsFactory->CreateRigidBody(AABBDesc, theAABBShape));
 }
 
 // Creates a Description for a AABB and adds it to the World

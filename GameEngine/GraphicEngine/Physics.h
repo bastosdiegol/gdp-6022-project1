@@ -9,6 +9,7 @@
 #include <SphereShape.h>
 #include <PlaneShape.h>
 #include <BoxShape.h>
+#include <AABBShape.h>
 
 #define Bullet_Physics
 

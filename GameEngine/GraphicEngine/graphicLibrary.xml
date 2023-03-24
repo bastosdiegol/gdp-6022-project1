@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <graphicsLibrary>
-	<scene title="2.Physics Proj#2" camEyeX="0" camEyeY="75" camEyeZ="-32" camTarX="32" camTarY="0" camTarZ="32">
+	<scene title="2.Physics Proj#2" camEyeX="0" camEyeY="75" camEyeZ="-32" camTarX="0" camTarY="0" camTarZ="0">
 		<model path="assets/Platform32x32.ply" title="Plane">
 			<mesh id="Plane">
 				<position x="0" y="0" z="0" />
@@ -17,7 +17,7 @@
 		</model>
 		<model path="assets/ISO_Shphere.ply" title="Player">
 			<mesh id="Player">
-				<position x="32" y="5" z="32" />
+				<position x="10" y="10" z="10" />
 				<rotate x="0" y="0" z="0" />
 				<useColor value="true" />
 				<color r="0.82745" g="0.82745" b="0.82745" a="1" />
