@@ -65,7 +65,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	const float ZOOM_FACTOR = 0.1f;
 
 	glm::vec3 direction(0.f);
-	float force = 5.f;
+	// The higher the mass of the actor hard is to control it
+	// Little hack here multiplying the force by its mass
+	float force = 5.f * g_actor->m_scale.x;
 
 	float distanceBetweenEyeTarget = glm::distance(*g_cameraEye, *g_cameraTarget);
 	glm::vec3 cameraDirectionToTarget = glm::normalize(*g_cameraTarget - *g_cameraEye);
@@ -74,19 +76,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_A /*&& action == GLFW_PRESS*/)     // Left
 	{
-		direction.x += 1;
+		direction.x = 1;
 	}
 	if (key == GLFW_KEY_D /*&& action == GLFW_PRESS*/)     // Right
 	{
-		direction.x += -1;
+		direction.x = -1;
 	}
 	if (key == GLFW_KEY_W /*&& action == GLFW_PRESS*/)     // Forward
 	{
-		direction.z += 1;
+		direction.z = 1;
 	}
 	if (key == GLFW_KEY_S /*&& action == GLFW_PRESS*/)     // Backwards
 	{
-		direction.z += -1;
+		direction.z = -1;
 	}
 	if (key == GLFW_KEY_UP /*&& action == GLFW_PRESS*/) {
 		*g_cameraEye += ZOOM_FACTOR * distanceBetweenEyeTarget * cameraDirectionToTarget;
