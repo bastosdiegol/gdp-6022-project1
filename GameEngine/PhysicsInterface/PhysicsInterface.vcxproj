@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AABBShape.h" />
     <ClInclude Include="BodyType.h" />
     <ClInclude Include="BoxShape.h" />
     <ClInclude Include="CylinderShape.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="SphereShape.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AABBShape.cpp" />
     <ClCompile Include="BoxShape.cpp" />
     <ClCompile Include="CylinderShape.cpp" />
     <ClCompile Include="PlaneShape.cpp" />

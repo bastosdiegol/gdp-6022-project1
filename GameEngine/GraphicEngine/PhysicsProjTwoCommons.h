@@ -164,21 +164,21 @@ physics::RigidBodyDesc createRigidBodyDesc(bool isStatic, float mass, physics::V
 
 // Creates a Description for a AABB and adds it to the World
 void setMeshObjectAsStaticPhysObjectAABB(std::string name) {
-	//cMeshObject* theMesh;
-	//// Links the MeshObject to the AABB PhysicsObject
-	//theMesh = g_ProjectManager->m_selectedScene->m_mMeshes.find(name)->second;
-	//// Creates the AABB structure for the mesh
-	//float min[3] = { theMesh->m_parentModel->min_x,
-	//				 theMesh->m_parentModel->min_y,
-	//				 theMesh->m_parentModel->min_z };
-	//float max[3] = { theMesh->m_parentModel->max_x,
-	//				 theMesh->m_parentModel->max_y,
-	//				 theMesh->m_parentModel->max_z };
-	//physics::iShape* theAABBShape = new physics::AABBShape(min, max, Vector3(0.f, 1.f, 0.f));
-	//
-	//// Adds the AABB to the Physics World
-	//physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 1.f, theMesh->m_position, glm::vec3(0.f));
-	//world->AddBody(physicsFactory->CreateRigidBody(AABBDesc, theAABBShape));
+	cMeshObject* theMesh;
+	// Links the MeshObject to the AABB PhysicsObject
+	theMesh = g_ProjectManager->m_selectedScene->m_mMeshes.find(name)->second;
+	// Creates the AABB structure for the mesh
+	float min[3] = { theMesh->m_parentModel->min_x,
+					 theMesh->m_parentModel->min_y,
+					 theMesh->m_parentModel->min_z };
+	float max[3] = { theMesh->m_parentModel->max_x,
+					 theMesh->m_parentModel->max_y,
+					 theMesh->m_parentModel->max_z };
+	physics::iShape* theAABBShape = new physics::AABBShape(min, max, Vector3(0.f, 1.f, 0.f));
+	
+	// Adds the AABB to the Physics World
+	physics::RigidBodyDesc AABBDesc = createRigidBodyDesc(true, 1.f, theMesh->m_position, glm::vec3(0.f));
+	world->AddBody(physicsFactory->CreateRigidBody(AABBDesc, theAABBShape));
 }
 
 // Creates a Description for a AABB and adds it to the World
