@@ -212,9 +212,6 @@
     <ClInclude Include="cLightHelper.h">
       <Filter>Header Files\light</Filter>
     </ClInclude>
-    <ClInclude Include="iMovable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SoundUI.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>

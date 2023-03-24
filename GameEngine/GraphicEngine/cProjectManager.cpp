@@ -8,6 +8,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include "cProjectManager.h"
 #include "cMeshObject.h"
+#include <myMath.h>
 
 #ifdef _DEBUG
 #define DEBUG_LOG_ENABLED
@@ -510,7 +511,7 @@ void cProjectManager::Step()
 		cMeshObject* pCurrentMeshObject = itMeshes->second;
 
 		if (pCurrentMeshObject->physicsBody != nullptr) {
-			Vector3 newPositionVector;
+			physics::Vector3 newPositionVector;
 			pCurrentMeshObject->physicsBody->GetPosition(newPositionVector);
 			glm::vec3 newPosition = glm::vec3(newPositionVector.x, newPositionVector.y, newPositionVector.z);
 			pCurrentMeshObject->m_position = newPosition;

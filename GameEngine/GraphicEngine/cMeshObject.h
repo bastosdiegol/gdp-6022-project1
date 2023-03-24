@@ -6,10 +6,9 @@
 #include <FMOD/fmod.hpp>
 
 #include "cModel.h"
-#include "iMovable.h"
-#include "RigidBody.h"
+#include <iRigidBody.h>
 
-class cMeshObject : public iMovable {
+class cMeshObject {
 public:
 	cMeshObject(cModel* parent);
 	~cMeshObject();
@@ -42,8 +41,8 @@ public:
 	bool isTextureImposter;
 
 	glm::vec3	getGLMPosition();
-	Vector3		getVECPosition();
+	//Vector3		getVECPosition();
 	void		setPosition(glm::vec3 pos);
-	void		setPosition(Vector3 pos);
+	//void		setPosition(Vector3 pos);
 };
 

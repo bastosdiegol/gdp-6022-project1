@@ -14,10 +14,10 @@ namespace physics
 		m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, 
 			m_OverlappingPairCache, m_Solver, m_CollisionConfiguration);
 
-		m_DebugDrawer = new DebugDrawer(7);
-		m_DynamicsWorld->setDebugDrawer(m_DebugDrawer);
-		int debugMode = 1;
-		m_DynamicsWorld->getDebugDrawer()->setDebugMode(debugMode);
+		//m_DebugDrawer = new DebugDrawer(7);
+		//m_DynamicsWorld->setDebugDrawer(m_DebugDrawer);
+		//int debugMode = 1;
+		//m_DynamicsWorld->getDebugDrawer()->setDebugMode(debugMode);
 	}
 
 	PhysicsWorld::~PhysicsWorld()

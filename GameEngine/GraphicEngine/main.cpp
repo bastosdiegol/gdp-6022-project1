@@ -13,12 +13,13 @@
 #include "cProjectManager.h"
 #include "cProjectUI.h"
 #include "cShaderManager.h"
-#include "PhysicsSystem.h"
 #include <FModManager.h>
 #include "SoundUI.h"
 #include "cMeshFactory.h"
 //#include "cLightHelper.h"
 #include "cMeshFactory.h"
+#include "Physics.h"
+#include "iPhysicsWorld.h"
 
 // Scene Main Loops, Globals and Functions
 #include "PhysicsProjTwoCommons.h"
@@ -39,8 +40,10 @@ glm::vec3* g_cameraEye;
 glm::vec3* g_cameraTarget;
 // Global Project Manager
 cProjectManager* g_ProjectManager;
-// Global Physics System
-PhysicsSystem* g_PhysicsSystem;
+// Global Physics Factory
+PhysicsFactoryType* g_PhysicsFactory;
+// Global Physics World
+physics::iPhysicsWorld* g_PhysicsWorld;
 // FMOD Manager
 FModManager* g_FModManager;
 // Actor
@@ -54,9 +57,6 @@ cMeshFactory* g_MeshFactory;
 bool g_isClicked = false;
 double g_MouseStaticPosX = 400;
 double g_MouseStaticPosY = 400;
-
-Vector3 g_forwardVector;
-Vector3 g_rightVector;
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -179,9 +179,6 @@ int main(int argc, char* argv[]) {
 
 	// Creates my Project Manager
 	g_ProjectManager = new cProjectManager(shaderID);
-
-	// Creates my Physics System
-	g_PhysicsSystem = new PhysicsSystem();
 	
 	// Creates my Project Manager UI - ImGui Window
 	cProjectUI g_projectUI(g_ProjectManager);
@@ -376,7 +373,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	delete g_ProjectManager;
-	delete g_PhysicsSystem;
+	//delete g_PhysicsSystem;
 	delete g_FModManager;
 	delete soundUI;
 

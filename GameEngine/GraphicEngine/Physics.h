@@ -17,7 +17,7 @@
 #include <physics\gdp\PhysicsFactory.h>
 #elif defined Bullet_Physics
 #pragma comment(lib, "BulletSource.lib")
-#pragma comment(lib, "BulletPhysics.lib")
+#pragma comment(lib, "PhysicsBullet.lib")
 #include <PhysicsFactory.h>
 
 #elif defined PhysX_Physics

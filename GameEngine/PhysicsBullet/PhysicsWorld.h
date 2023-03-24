@@ -34,7 +34,7 @@ namespace physics
 		btSequentialImpulseConstraintSolver* m_Solver;
 		btDiscreteDynamicsWorld* m_DynamicsWorld;
 
-		btIDebugDraw* m_DebugDrawer;
+		//btIDebugDraw* m_DebugDrawer;
 
 		PhysicsWorld(const PhysicsWorld&) {}
 		PhysicsWorld& operator=(const PhysicsWorld&) {

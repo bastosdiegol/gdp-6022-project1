@@ -42,14 +42,14 @@ glm::vec3 cMeshObject::getGLMPosition() {
 	return m_position;
 }
 
-Vector3 cMeshObject::getVECPosition() {
-	return Vector3(m_position);
-}
+//Vector3 cMeshObject::getVECPosition() {
+//	return Vector3(m_position);
+//}
 
 void cMeshObject::setPosition(glm::vec3 pos) {
 	m_position = pos;
 }
 
-void cMeshObject::setPosition(Vector3 pos) {
-	m_position = pos.GetGLM();
-}
+//void cMeshObject::setPosition(Vector3 pos) {
+//	m_position = pos.GetGLM();
+//}
