@@ -17,6 +17,7 @@ public:
 
 	std::string		m_meshName;
 	glm::vec3		m_position;
+	glm::vec3		m_InitialPosition;
 	glm::vec3		m_rotation;
 	glm::vec3		m_scale;
 	glm::quat		qRotation;
@@ -44,5 +45,6 @@ public:
 	//Vector3		getVECPosition();
 	void		setPosition(glm::vec3 pos);
 	//void		setPosition(Vector3 pos);
+	void		defineInitialPosition();
 };
 

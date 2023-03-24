@@ -50,6 +50,10 @@ void cMeshObject::setPosition(glm::vec3 pos) {
 	m_position = pos;
 }
 
+void cMeshObject::defineInitialPosition() {
+	m_InitialPosition = m_position;
+}
+
 //void cMeshObject::setPosition(Vector3 pos) {
 //	m_position = pos.GetGLM();
 //}

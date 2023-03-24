@@ -107,6 +107,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_ESCAPE) {
 		g_ProjectManager->m_GameLoopState = SHUTING_DOWN;
 	}
+	if (key == GLFW_KEY_TAB) {
+		g_ProjectManager->m_GameLoopState = NEW_GAME;
+	}
 
 	g_actor->physicsBody->ApplyForce(direction * force);
 }

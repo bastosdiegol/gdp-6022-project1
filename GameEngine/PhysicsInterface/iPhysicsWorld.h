@@ -31,6 +31,8 @@ namespace physics
 		virtual void DebugDraw() { }
 		virtual void RegisterCollisionListener(iCollisionListener* listener) = 0;
 
+		virtual void TransformRigidBodyPosition(iCollisionBody* body, const Vector3& position) = 0;
+
 	protected:
 		iPhysicsWorld() {}
 

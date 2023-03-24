@@ -107,6 +107,7 @@ void PhysicsProjTwoStartingUp() {
 		for (int column = 0; column < 6; column++) {
 			cMeshObject* newCube = g_MeshFactory->createCubeMesh("Cube["+std::to_string(line)+","+std::to_string(column) + "]");
 			newCube->m_position = wallPosition;
+			newCube->defineInitialPosition();
 			wallPosition.x += 1.0f;
 			newCube->m_bUse_RGBA_colour = true;
 			newCube->m_RGBA_colour = glm::vec4(1.f, 0.f, 1.f, 1.f);
@@ -130,6 +131,7 @@ void PhysicsProjTwoStartingUp() {
 	// Sets main actor
 	g_actor = g_MeshFactory->createSphereMesh("Player");
 	g_actor->m_position = glm::vec3(0.0f, 5.0f, 0.0f);
+	g_actor->defineInitialPosition();
 	g_actor->m_scale = glm::vec3(1.0f);
 	g_actor->m_bUse_RGBA_colour = true;
 	g_actor->m_RGBA_colour = glm::vec4(0.f, 1.f, 0.f, 1.f);
@@ -146,7 +148,18 @@ void PhysicsProjTwoStartingUp() {
 
 void PhysicsProjTwoNewGame() {
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
-
+	std::map<std::string, cMeshObject*>::iterator itMeshes;
+	itMeshes = g_ProjectManager->m_selectedScene->m_mMeshes.begin();
+	// Iterates through all meshes
+	for (itMeshes; itMeshes != g_ProjectManager->m_selectedScene->m_mMeshes.end(); itMeshes++) {
+		cMeshObject* pCurrentMeshObject = itMeshes->second;
+		// If its not the plane
+		if (pCurrentMeshObject->m_meshName != "Plane") {
+			// Transform the RigidBody Position to Initial Position
+			g_PhysicsWorld->TransformRigidBodyPosition(pCurrentMeshObject->physicsBody, 
+													   pCurrentMeshObject->m_InitialPosition);
+		}
+	}
 }
 
 void PhysicsProjTwoRunning() {

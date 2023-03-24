@@ -57,4 +57,20 @@ namespace physics
 	{
 		m_DynamicsWorld->debugDrawWorld();
 	}
+
+	void PhysicsWorld::TransformRigidBodyPosition(iCollisionBody* body, const Vector3& position) {
+
+		btRigidBody* bulletBody = CastBulletRigidBody(body);
+		btTransform newTransform;
+		newTransform.setIdentity();
+		newTransform.setOrigin(btVector3(position.x, position.y, position.z));
+
+		// Kill all forces
+		bulletBody->clearForces();
+		// Reset the damping
+		bulletBody->setDamping(0.5, 0.5);
+		// Set the new transformation for the rigid body
+		bulletBody->setWorldTransform(newTransform);
+
+	}
 }

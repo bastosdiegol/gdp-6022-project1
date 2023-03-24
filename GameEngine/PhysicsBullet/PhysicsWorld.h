@@ -27,6 +27,8 @@ namespace physics
 		virtual void DebugDraw() override;
 		virtual void RegisterCollisionListener(iCollisionListener* listener) override {}
 
+		virtual void TransformRigidBodyPosition(iCollisionBody* body, const Vector3& position) override;
+
 	private:
 		btDefaultCollisionConfiguration* m_CollisionConfiguration;
 		btCollisionDispatcher* m_Dispatcher;
