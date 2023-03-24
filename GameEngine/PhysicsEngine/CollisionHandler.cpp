@@ -92,6 +92,46 @@ namespace physics
 		return closestPoint;
 	}
 
+	glm::vec3 GetClosestPointAABBSphere(RigidBody* rbAABB, RigidBody* rbSphere) {
+		// Get the positions and radii of the two bodies
+		Vector3 posAABB, posSphere;
+		float radiusSphere = SphereShape::Cast(rbSphere->GetShape())->GetRadius();
+		rbSphere->GetPosition(posSphere);
+		rbAABB->GetPosition(posAABB);
+		AABBShape* aabbShape = AABBShape::Cast(rbAABB->GetShape());
+		float min[3] = { aabbShape->Min[0],aabbShape->Min[1],aabbShape->Min[2] };
+		float max[3] = { aabbShape->Max[0],aabbShape->Max[1],aabbShape->Max[2] };
+
+		// Calculate the closest point on the AABB's surface to the sphere center
+		glm::vec3 closestPoint(posSphere.GetGLM());
+		if (posSphere.x < min[0]) closestPoint.x = min[0];
+		else if (posSphere.x > max[0]) closestPoint.x = max[0];
+		if (posSphere.y < min[1]) closestPoint.y = min[1];
+		else if (posSphere.y > max[1]) closestPoint.y = max[1];
+		if (posSphere.z < min[2]) closestPoint.z = min[2];
+		else if (posSphere.z > max[2]) closestPoint.z = max[2];
+
+		// Calculate the vector between the sphere center and the closest point
+		glm::vec3 diff(closestPoint);
+		diff -= posSphere.GetGLM();
+
+		// If the sphere is penetrating the AABB, adjust the closest point on the AABB's surface
+		float len = diff.length();
+		if (len < radiusSphere) {
+			// If the vector is zero, set it to a random direction
+			if (len == 0.0f) diff = glm::vec3(1.0f, 0.0f, 0.0f);
+
+			// Scale the vector to the surface of the sphere
+			diff *= (radiusSphere / len);
+
+			// Move the closest point on the AABB's surface
+			closestPoint = posSphere.GetGLM();
+			closestPoint += diff;
+		}
+
+		return closestPoint;
+	}
+
 	bool CollisionHandler::CollideSphereSphere(float dt, RigidBody* bodyA, SphereShape* sphereA,
 		RigidBody* bodyB, SphereShape* sphereB)
 	{
@@ -196,7 +236,8 @@ namespace physics
 
 		glm::vec3 aabbMin = glm::vec3(shapeAABBShape->Min[0], shapeAABBShape->Min[1], shapeAABBShape->Min[2]);
 		glm::vec3 aabbMax = glm::vec3(shapeAABBShape->Max[0], shapeAABBShape->Max[1], shapeAABBShape->Max[2]);
-		glm::vec3 aabbSphereClosestPoint = closestPointToAABB(spherePosition.GetGLM(), aabbMin, aabbMax);
+		//glm::vec3 aabbSphereClosestPoint = closestPointToAABB(spherePosition.GetGLM(), aabbMin, aabbMax);
+		glm::vec3 aabbSphereClosestPoint = GetClosestPointAABBSphere(bodyAABB, sphere);
 
 		glm::vec3 overlapVector = aabbSphereClosestPoint - sphere->m_Position.GetGLM();
 		float overlapLength = glm::length(overlapVector);
@@ -207,7 +248,7 @@ namespace physics
 		{
 			float velocity = glm::length(sphere->m_LinearVelocity.GetGLM());
 			float fractDt = 0.f;
-			if (velocity != 0.0f)
+			if (velocity != 0.0f && overlapLength != 0.0f)
 			{
 				fractDt = sphereShape->GetRadius() * ((sphereShape->GetRadius() / overlapLength) - 1.0f) / velocity;
 			}
@@ -758,4 +799,5 @@ namespace physics
 
 		return sqDist;
 	}
+
 }

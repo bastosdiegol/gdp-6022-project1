@@ -91,7 +91,7 @@ void PhysicsProjTwoStartingUp() {
 	physics::iShape* playerBallShape = new physics::SphereShape(2.0f);
 	physics::RigidBodyDesc PlayerDesc = createRigidBodyDesc(false, 2.f, g_actor->m_position, glm::vec3(0.f));
 	g_actor->physicsBody = physicsFactory->CreateRigidBody(PlayerDesc, playerBallShape);
-	//world->AddBody(g_actor->physicsBody);
+	world->AddBody(g_actor->physicsBody);
 
 	// Creates all 5 Balls
 	for (int i = 1; i <= 5; i++) {
@@ -100,7 +100,7 @@ void PhysicsProjTwoStartingUp() {
 		physics::iShape* ballShape = new physics::SphereShape(newPhysicsBall->m_scale.x);
 		physics::RigidBodyDesc ballDesc = createRigidBodyDesc(false, newPhysicsBall->m_scale.x, newPhysicsBall->m_position, glm::vec3(0.f));
 		newPhysicsBall->physicsBody = physicsFactory->CreateRigidBody(ballDesc, ballShape);
-		//world->AddBody(newPhysicsBall->physicsBody);
+		world->AddBody(newPhysicsBall->physicsBody);
 	}
 
 	g_ProjectManager->m_GameLoopState = GameState::RUNNING;
