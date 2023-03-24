@@ -58,6 +58,8 @@ bool g_isClicked = false;
 double g_MouseStaticPosX = 400;
 double g_MouseStaticPosY = 400;
 
+extern void GenerateSphere();
+
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	const float MOVE_SPEED = 0.5f;
@@ -109,6 +111,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_TAB) {
 		g_ProjectManager->m_GameLoopState = NEW_GAME;
+	}
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+		GenerateSphere();
 	}
 
 	g_actor->physicsBody->ApplyForce(direction * force);

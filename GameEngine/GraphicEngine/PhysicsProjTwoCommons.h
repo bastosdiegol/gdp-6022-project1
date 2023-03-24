@@ -15,6 +15,9 @@
 #define DEBUG_PRINT(x)
 #endif
 
+#define MIN_SCALE 0.5f
+#define MAX_SCALE 5.0f
+
 extern cProjectManager* g_ProjectManager;
 extern GLFWwindow* window;
 extern glm::vec3* g_cameraEye;
@@ -28,13 +31,14 @@ extern cMeshFactory* g_MeshFactory;
 extern PhysicsFactoryType* g_PhysicsFactory;
 // Global Physics World
 extern physics::iPhysicsWorld* g_PhysicsWorld;
-unsigned int yPosition = 10;
+unsigned int g_numOfSpheres = 0;
 
 void PhysicsProjTwoStartingUp();
 void PhysicsProjTwoNewGame();
 void PhysicsProjTwoRunning();
 void PhysicsProjTwoShutdown();
 float RandFloat(float min, float max);
+void GenerateSphere();
 
 void PhysicsProjTwoGameLoop() {
 	switch (g_ProjectManager->m_GameLoopState) {
@@ -117,7 +121,6 @@ void PhysicsProjTwoStartingUp() {
 										(newCube->m_parentModel->max_y - newCube->m_parentModel->min_y) * newCube->m_scale.y / 2.0f,
 										(newCube->m_parentModel->max_z - newCube->m_parentModel->min_z) * newCube->m_scale.z / 2.0f);
 			physics::iShape* boxShape = new physics::BoxShape(aabbHalfExtends);
-			physics::RigidBodyDesc desc;
 			desc.isStatic = false;
 			desc.mass = 0.5;
 			desc.position = newCube->m_position;
@@ -133,7 +136,7 @@ void PhysicsProjTwoStartingUp() {
 	int numOfStaticBoxes = 8;
 	for (int i = 0; i < numOfStaticBoxes; i++) {
 		cMeshObject* newCube = g_MeshFactory->createCubeMesh("StaticBox[" + std::to_string(i) + "]");
-		newCube->m_scale = glm::vec3(RandFloat(1.0f, 4.0f));
+		newCube->m_scale = glm::vec3(RandFloat(MIN_SCALE, MAX_SCALE));
 		newCube->m_position = glm::vec3(RandFloat(-16.0f + newCube->m_scale.x, 0.0f), 
 										0.5f, 
 										RandFloat(-16.0f + newCube->m_scale.z, 0.0f));
@@ -177,15 +180,28 @@ void PhysicsProjTwoNewGame() {
 	std::map<std::string, cMeshObject*>::iterator itMeshes;
 	itMeshes = g_ProjectManager->m_selectedScene->m_mMeshes.begin();
 	// Iterates through all meshes
-	for (itMeshes; itMeshes != g_ProjectManager->m_selectedScene->m_mMeshes.end(); itMeshes++) {
+	while (itMeshes != g_ProjectManager->m_selectedScene->m_mMeshes.end()) {
 		cMeshObject* pCurrentMeshObject = itMeshes->second;
+		++itMeshes;
 		// If its not the plane
 		if (pCurrentMeshObject->m_meshName != "Plane") {
+			// Checks if the Object is a Generated Sphere
+			if (pCurrentMeshObject->m_meshName.find("Sphere") == 0) {
+				// TODO: FIX the Deletion
+				//if (!pCurrentMeshObject->physicsBody) {
+				//	g_PhysicsWorld->RemoveBody(pCurrentMeshObject->physicsBody);
+				//	delete pCurrentMeshObject->physicsBody;
+				//}
+				//g_ProjectManager->m_selectedScene->m_mMeshes.erase(pCurrentMeshObject->m_meshName);
+				//delete pCurrentMeshObject;
+			}
 			// Transform the RigidBody Position to Initial Position
-			g_PhysicsWorld->TransformRigidBodyPosition(pCurrentMeshObject->physicsBody, 
-													   pCurrentMeshObject->m_InitialPosition);
+			g_PhysicsWorld->TransformRigidBodyPosition(pCurrentMeshObject->physicsBody,
+				pCurrentMeshObject->m_InitialPosition);
 		}
 	}
+
+	g_numOfSpheres = 0;
 }
 
 void PhysicsProjTwoRunning() {
@@ -217,4 +233,24 @@ float RandFloat(float min, float max) {
 	float diff = max - min;
 	float r = random * diff;
 	return min + r;
+}
+
+void GenerateSphere() {
+	cMeshObject* newSphere = g_MeshFactory->createSphereMesh("Sphere[" + std::to_string(g_numOfSpheres) + "]");
+	g_numOfSpheres++;
+	newSphere->m_scale = glm::vec3(RandFloat(MIN_SCALE, MAX_SCALE));
+	newSphere->m_position = glm::vec3(RandFloat(16.0f - newSphere->m_scale.x, 0.0f),
+									  0.5f,
+									  RandFloat(16.0f - newSphere->m_scale.z, 0.0f));
+	newSphere->defineInitialPosition();
+	newSphere->m_bUse_RGBA_colour = true;
+	newSphere->m_RGBA_colour = glm::vec4(0.2f, 0.4f, 0.6f, 1.f);
+	physics::iShape* ballShape = new physics::SphereShape(newSphere->m_scale.x * 0.5);
+	physics::RigidBodyDesc desc;
+	desc.isStatic = false;
+	desc.mass = newSphere->m_scale.x;
+	desc.position = newSphere->m_position;
+	desc.linearVelocity = glm::vec3(0.f);
+	newSphere->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, ballShape);
+	g_PhysicsWorld->AddBody(newSphere->physicsBody);
 }
