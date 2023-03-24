@@ -34,6 +34,7 @@ void PhysicsProjTwoStartingUp();
 void PhysicsProjTwoNewGame();
 void PhysicsProjTwoRunning();
 void PhysicsProjTwoShutdown();
+float RandFloat(float min, float max);
 
 void PhysicsProjTwoGameLoop() {
 	switch (g_ProjectManager->m_GameLoopState) {
@@ -88,9 +89,9 @@ void PhysicsProjTwoStartingUp() {
 	float max[3] = { thePlane->m_parentModel->max_x,
 					 thePlane->m_parentModel->max_y,
 					 thePlane->m_parentModel->max_z };
-	glm::vec3 aabbHalfExtends = glm::vec3((max[0] - min[0]) / 2.0f,
-										  (max[1] - min[1]) / 2.0f,
-										  (max[2] - min[2]) / 2.0f);
+	glm::vec3 aabbHalfExtends = glm::vec3((max[0] - min[0]) * thePlane->m_scale.x / 2.0f,
+										  (max[1] - min[1]) * thePlane->m_scale.y / 2.0f,
+										  (max[2] - min[2]) * thePlane->m_scale.z / 2.0f);
 	physics::iShape* planeShape = new physics::BoxShape(aabbHalfExtends);
 	physics::RigidBodyDesc desc;
 	desc.isStatic = true;
@@ -102,9 +103,9 @@ void PhysicsProjTwoStartingUp() {
 
 	// Create a Cube Wall
 	// Wall Initial Position
-	glm::vec3 wallPosition(-10.0f, 1.0f, 8.0f);
-	for (int line = 0; line < 10; line++) {
-		for (int column = 0; column < 6; column++) {
+	glm::vec3 wallPosition(-13.0f, 1.0f, 8.0f);
+	for (int line = 0; line < 6; line++) {
+		for (int column = 0; column < 10; column++) {
 			cMeshObject* newCube = g_MeshFactory->createCubeMesh("Cube["+std::to_string(line)+","+std::to_string(column) + "]");
 			newCube->m_position = wallPosition;
 			newCube->defineInitialPosition();
@@ -112,9 +113,9 @@ void PhysicsProjTwoStartingUp() {
 			newCube->m_bUse_RGBA_colour = true;
 			newCube->m_RGBA_colour = glm::vec4(1.f, 0.f, 1.f, 1.f);
 			// Creates the AABB structure for the mesh
-			aabbHalfExtends = glm::vec3((newCube->m_parentModel->max_x - newCube->m_parentModel->min_x) / 2.0f,
-										(newCube->m_parentModel->max_y - newCube->m_parentModel->min_y) / 2.0f,
-										(newCube->m_parentModel->max_z - newCube->m_parentModel->min_z) / 2.0f);
+			aabbHalfExtends = glm::vec3((newCube->m_parentModel->max_x - newCube->m_parentModel->min_x) * newCube->m_scale.x / 2.0f,
+										(newCube->m_parentModel->max_y - newCube->m_parentModel->min_y) * newCube->m_scale.y / 2.0f,
+										(newCube->m_parentModel->max_z - newCube->m_parentModel->min_z) * newCube->m_scale.z / 2.0f);
 			physics::iShape* boxShape = new physics::BoxShape(aabbHalfExtends);
 			physics::RigidBodyDesc desc;
 			desc.isStatic = false;
@@ -124,8 +125,33 @@ void PhysicsProjTwoStartingUp() {
 			newCube->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, boxShape);
 			g_PhysicsWorld->AddBody(newCube->physicsBody);
 		}
-		wallPosition.x = -10.f;
+		wallPosition.x = -13.f;
 		wallPosition.y += 1.5f;
+	}
+
+	// Create a couple of static boxes
+	int numOfStaticBoxes = 8;
+	for (int i = 0; i < numOfStaticBoxes; i++) {
+		cMeshObject* newCube = g_MeshFactory->createCubeMesh("StaticBox[" + std::to_string(i) + "]");
+		newCube->m_scale = glm::vec3(RandFloat(1.0f, 4.0f));
+		newCube->m_position = glm::vec3(RandFloat(-16.0f + newCube->m_scale.x, 0.0f), 
+										0.5f, 
+										RandFloat(-16.0f + newCube->m_scale.z, 0.0f));
+		newCube->defineInitialPosition();
+		newCube->m_bUse_RGBA_colour = true;
+		newCube->m_RGBA_colour = glm::vec4(0.f, 0.f, 0.5f, 1.f);
+		// Creates the AABB structure for the mesh
+		aabbHalfExtends = glm::vec3((newCube->m_parentModel->max_x - newCube->m_parentModel->min_x) * newCube->m_scale.x / 2.0f,
+			                        (newCube->m_parentModel->max_y - newCube->m_parentModel->min_y) * newCube->m_scale.y / 2.0f,
+			                        (newCube->m_parentModel->max_z - newCube->m_parentModel->min_z) * newCube->m_scale.z / 2.0f);
+		physics::iShape* boxShape = new physics::BoxShape(aabbHalfExtends);
+		physics::RigidBodyDesc desc;
+		desc.isStatic = true;
+		desc.mass = 0;
+		desc.position = newCube->m_position;
+		desc.linearVelocity = glm::vec3(0.f);
+		newCube->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, boxShape);
+		g_PhysicsWorld->AddBody(newCube->physicsBody);
 	}
 
 	// Sets main actor
@@ -182,4 +208,13 @@ void PhysicsProjTwoShutdown() {
 	// Deletes thigs
 	delete g_PhysicsFactory;
 	delete g_PhysicsWorld;
+}
+
+// Utility function for a random range of two floats
+float RandFloat(float min, float max) {
+	//DEBUG_PRINT("RandFloat(%f, %f)\n", min, max);
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = max - min;
+	float r = random * diff;
+	return min + r;
 }
