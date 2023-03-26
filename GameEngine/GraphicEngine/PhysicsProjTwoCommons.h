@@ -44,6 +44,11 @@ float RandFloat(float min, float max);
 /// And adds it to the PhysicsWorld
 /// </summary>
 void GenerateSphere();
+/// <summary>
+/// Switch the actor to the next valid controllable ball
+/// </summary>
+/// <param name="switchNext">Switch foward if true else backwards</param>
+void ChangeControllableBall(bool switchNext);
 
 void PhysicsProjTwoGameLoop() {
 	switch (g_ProjectManager->m_GameLoopState) {
@@ -212,7 +217,7 @@ void PhysicsProjTwoStartingUp() {
 	g_actor->m_bUse_RGBA_colour = true;
 	g_actor->m_RGBA_colour = glm::vec4(0.f, 1.f, 0.f, 1.f);
 	// Creates the Shape and Description
-	physics::iShape* ballShape = new physics::SphereShape(g_actor->m_scale.x);
+	physics::iShape* ballShape = new physics::SphereShape(g_actor->m_scale.x * 0.5); // *0.5 to convert Diameter to Radius
 	desc.isStatic = false;
 	desc.mass = g_actor->m_scale.x;
 	desc.position = g_actor->m_position;
@@ -235,15 +240,21 @@ void PhysicsProjTwoNewGame() {
 		++itMeshes;
 		// If its not the plane
 		if (pCurrentMeshObject->m_meshName != "Plane") {
+			// Checks if the Object is the Player
+			if (pCurrentMeshObject->m_meshName == "Player") {
+				g_actor = pCurrentMeshObject;
+				pCurrentMeshObject->m_RGBA_colour = glm::vec4(0.f, 1.f, 0.f, 1.f);
+
 			// Checks if the Object is a Generated Sphere
-			if (pCurrentMeshObject->m_meshName.find("Sphere") == 0) {
-				// TODO: FIX the Deletion
-				//if (!pCurrentMeshObject->physicsBody) {
-				//	g_PhysicsWorld->RemoveBody(pCurrentMeshObject->physicsBody);
-				//	delete pCurrentMeshObject->physicsBody;
-				//}
-				//g_ProjectManager->m_selectedScene->m_mMeshes.erase(pCurrentMeshObject->m_meshName);
-				//delete pCurrentMeshObject;
+			}else if (pCurrentMeshObject->m_meshName.find("Sphere") == 0) {			
+				if (!pCurrentMeshObject->physicsBody) {
+					g_PhysicsWorld->RemoveBody(pCurrentMeshObject->physicsBody);
+					delete pCurrentMeshObject->physicsBody;
+				}
+				g_ProjectManager->m_selectedScene->m_mMeshes.erase(pCurrentMeshObject->m_meshName);
+				delete pCurrentMeshObject;
+
+				continue;
 			}
 			// Transform the RigidBody Position to Initial Position
 			g_PhysicsWorld->TransformRigidBodyPosition(pCurrentMeshObject->physicsBody,
@@ -297,7 +308,7 @@ void GenerateSphere() {
 	newSphere->m_bUse_RGBA_colour = true;
 	newSphere->m_RGBA_colour = glm::vec4(0.2f, 0.4f, 0.6f, 1.f);
 	// Creates the Shape and Description
-	physics::iShape* ballShape = new physics::SphereShape(newSphere->m_scale.x * 0.5);
+	physics::iShape* ballShape = new physics::SphereShape(newSphere->m_scale.x * 0.5); // *0.5 to convert Diameter to Radius
 	physics::RigidBodyDesc desc;
 	desc.isStatic = false;
 	desc.mass = newSphere->m_scale.x;
@@ -307,4 +318,47 @@ void GenerateSphere() {
 	newSphere->physicsBody = g_PhysicsFactory->CreateRigidBody(desc, ballShape);
 	// Adds the RigidBody to the World
 	g_PhysicsWorld->AddBody(newSphere->physicsBody);
+}
+
+void ChangeControllableBall(bool switchNext) {
+	std::map<std::string, cMeshObject*>::iterator itMeshes;
+	// Finds the current actor
+	itMeshes = g_ProjectManager->m_selectedScene->m_mMeshes.find(g_actor->m_meshName);
+	// Iterate through all meshes starting from the actor
+	if (itMeshes != g_ProjectManager->m_selectedScene->m_mMeshes.end()) {
+		// Conditional to Next or Previous Ball
+		if (switchNext) {
+			while (true) {
+				++itMeshes;
+				// Checks if it is the end of the map - if so restart
+				if (itMeshes == g_ProjectManager->m_selectedScene->m_mMeshes.end())
+					itMeshes = g_ProjectManager->m_selectedScene->m_mMeshes.begin();
+				// Found the next valid controllable ball
+				// Switch colors and actor
+				if (itMeshes->second->m_meshName.find("Sphere") == 0 ||
+					itMeshes->second->m_meshName == "Player") {
+					g_actor->m_RGBA_colour = glm::vec4(0.2f, 0.4f, 0.6f, 1.f);
+					g_actor = itMeshes->second;
+					g_actor->m_RGBA_colour = glm::vec4(0.f, 1.f, 0.f, 1.f);
+					break;
+				}
+			}
+		} else {
+			while (true) {
+				--itMeshes;
+				// Found the next valid controllable ball
+				// Switch colors and actor
+				if (itMeshes->second->m_meshName.find("Sphere") == 0 ||
+					itMeshes->second->m_meshName == "Player") {
+					g_actor->m_RGBA_colour = glm::vec4(0.2f, 0.4f, 0.6f, 1.f);
+					g_actor = itMeshes->second;
+					g_actor->m_RGBA_colour = glm::vec4(0.f, 1.f, 0.f, 1.f);
+					break;
+				}
+				// Checks if it is the start of the map - if so go to the end
+				if (itMeshes == g_ProjectManager->m_selectedScene->m_mMeshes.begin())
+					itMeshes = g_ProjectManager->m_selectedScene->m_mMeshes.end();
+			}
+		}
+	}
 }

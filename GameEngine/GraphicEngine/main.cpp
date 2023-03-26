@@ -59,7 +59,7 @@ double g_MouseStaticPosX = 400;
 double g_MouseStaticPosY = 400;
 
 extern void GenerateSphere();
-
+extern void ChangeControllableBall(bool switchNext);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	const float MOVE_SPEED = 0.5f;
@@ -69,7 +69,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	glm::vec3 direction(0.f);
 	// The higher the mass of the actor hard is to control it
 	// Little hack here multiplying the force by its mass
-	float force = 5.f * g_actor->m_scale.x;
+	float force = 50.f * g_actor->m_scale.x;
 
 	float distanceBetweenEyeTarget = glm::distance(*g_cameraEye, *g_cameraTarget);
 	glm::vec3 cameraDirectionToTarget = glm::normalize(*g_cameraTarget - *g_cameraEye);
@@ -114,6 +114,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		GenerateSphere();
+	}
+	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+		ChangeControllableBall(true);
+	}
+	if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+		ChangeControllableBall(false);
 	}
 
 	g_actor->physicsBody->ApplyForce(direction * force);

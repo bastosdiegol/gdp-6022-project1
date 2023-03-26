@@ -61,16 +61,24 @@ namespace physics
 	void PhysicsWorld::TransformRigidBodyPosition(iCollisionBody* body, const Vector3& position) {
 
 		btRigidBody* bulletBody = CastBulletRigidBody(body);
-		btTransform newTransform;
-		newTransform.setIdentity();
-		newTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
 		// Kill all forces
 		bulletBody->clearForces();
-		// Reset the damping
-		bulletBody->setDamping(0.5, 0.5);
+		bulletBody->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+		bulletBody->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+
+		// Prepares the Position transformation
+		btTransform newTransform;
+		newTransform.setIdentity();
+		newTransform.setOrigin(btVector3(position.x, position.y, position.z));		
 		// Set the new transformation for the rigid body
 		bulletBody->setWorldTransform(newTransform);
+
+		// Restore the rigid body's dynamics properties
+		bulletBody->setCollisionFlags(bulletBody->getCollisionFlags() & ~btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT);
+		bulletBody->setActivationState(ACTIVE_TAG);
+		bulletBody->setLinearVelocity(btVector3(0, 0, 0));
+		bulletBody->setAngularVelocity(btVector3(0, 0, 0));
 
 	}
 }
