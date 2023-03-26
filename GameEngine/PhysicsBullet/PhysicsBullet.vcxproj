@@ -72,9 +72,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <SourcePath>$(SolutionDir)dev\include;$(SolutionDir)external\bullet3\src;$(SolutionDir)PhysicsInterface;$(VC_SourcePath);</SourcePath>
+    <IncludePath>$(SolutionDir)external\bullet3\src\extern\bullet;$(SolutionDir)dev\include;$(SolutionDir)PhysicsInterface;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <SourcePath>$(SolutionDir)dev\include;$(SolutionDir)external\bullet3\src;$(SolutionDir)PhysicsInterface;$(VC_SourcePath);</SourcePath>
+    <IncludePath>$(SolutionDir)external\bullet3\src\extern\bullet;$(SolutionDir)dev\include;$(SolutionDir)PhysicsInterface;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,6 +153,11 @@
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SoftBody.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BulletSource\BulletSource.vcxproj">
+      <Project>{1a7a68ee-3149-44f9-b792-d49b2b62028e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

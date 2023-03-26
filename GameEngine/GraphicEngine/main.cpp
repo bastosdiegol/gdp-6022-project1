@@ -6,6 +6,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include <chrono>
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -52,6 +53,11 @@ cMeshObject* g_actor;
 glm::vec3 g_actorFacing(0.0f);
 // Mesh Factory
 cMeshFactory* g_MeshFactory;
+
+// Time Variables
+std::chrono::high_resolution_clock::time_point g_currentTime;
+std::chrono::duration<float> g_deltaTime;
+std::chrono::high_resolution_clock::time_point g_lastTime;
 
 // Mouse variables
 bool g_isClicked = false;
@@ -234,7 +240,12 @@ int main(int argc, char* argv[]) {
 
 	g_ProjectManager->LoadScene("2.Physics Proj#2");
 
+	g_lastTime = std::chrono::high_resolution_clock::now();
+
 	while (!glfwWindowShouldClose(window)) {
+		g_currentTime = std::chrono::high_resolution_clock::now();
+		g_deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(g_currentTime - g_lastTime);
+		g_lastTime = g_currentTime;
 
 		//DrawConcentricDebugLightObjects();
 

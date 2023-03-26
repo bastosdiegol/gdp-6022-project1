@@ -28,6 +28,11 @@ extern glm::vec3 g_actorFacing;
 extern FModManager* g_FModManager;
 extern cMeshFactory* g_MeshFactory;
 
+// Time Variables
+extern std::chrono::high_resolution_clock::time_point g_currentTime;
+extern std::chrono::duration<float> g_deltaTime;
+extern std::chrono::high_resolution_clock::time_point g_lastTime;
+
 // Global Physics Factory
 extern PhysicsFactoryType* g_PhysicsFactory;
 // Global Physics World
@@ -269,7 +274,7 @@ void PhysicsProjTwoRunning() {
 	// *********
 	// MAIN LOOP
 	// *********	
-	g_PhysicsWorld->TimeStep(0.1f);
+	g_PhysicsWorld->TimeStep(g_deltaTime.count());
 	// Step to update meshs position on the screen based on the physics
 	g_ProjectManager->Step();
 	

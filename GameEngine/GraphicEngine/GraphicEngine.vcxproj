@@ -225,6 +225,11 @@
     <Xml Include="graphicLibrary.xml" />
     <Xml Include="sounds.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BulletSource\BulletSource.vcxproj">
+      <Project>{1a7a68ee-3149-44f9-b792-d49b2b62028e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
