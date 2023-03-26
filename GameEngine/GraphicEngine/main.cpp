@@ -112,6 +112,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		newCameraDirection = glm::rotate(cameraDirectionToTarget, cameraAngleTurn, glm::vec3(0.0f, 1.0f, 0.0f));
 		*g_cameraEye = *g_cameraTarget - distanceBetweenEyeTarget * newCameraDirection;
 	}
+	if (key == GLFW_KEY_KP_8) {
+		g_cameraEye->z--;
+		g_cameraTarget->z--;
+	}
+	if (key == GLFW_KEY_KP_2) {
+		g_cameraEye->z++;
+		g_cameraTarget->z++;
+	}
+	if (key == GLFW_KEY_KP_4) {
+		g_cameraEye->x--;
+		g_cameraTarget->x--;
+	}
+	if (key == GLFW_KEY_KP_6) {
+		g_cameraEye->x++;
+		g_cameraTarget->x++;
+	}
 	if (key == GLFW_KEY_ESCAPE) {
 		g_ProjectManager->m_GameLoopState = SHUTING_DOWN;
 	}

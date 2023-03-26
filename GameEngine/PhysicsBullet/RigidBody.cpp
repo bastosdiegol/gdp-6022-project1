@@ -68,6 +68,7 @@ namespace physics
 
 	void RigidBody::ApplyForce(const Vector3& force)
 	{
+		m_BulletRigidBody->activate();
 		btVector3 btForce;
 		CastBulletVector3(force, &btForce);
 		m_BulletRigidBody->applyCentralForce(btForce);
