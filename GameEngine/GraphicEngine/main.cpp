@@ -75,7 +75,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	glm::vec3 direction(0.f);
 	// The higher the mass of the actor hard is to control it
 	// Little hack here multiplying the force by its mass
-	float force = 50.f * g_actor->m_scale.x;
+	float force = 30.f * g_actor->m_scale.x;
 
 	float distanceBetweenEyeTarget = glm::distance(*g_cameraEye, *g_cameraTarget);
 	glm::vec3 cameraDirectionToTarget = glm::normalize(*g_cameraTarget - *g_cameraEye);

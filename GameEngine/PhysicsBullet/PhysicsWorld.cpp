@@ -62,23 +62,21 @@ namespace physics
 
 		btRigidBody* bulletBody = CastBulletRigidBody(body);
 
-		// Kill all forces
-		bulletBody->clearForces();
-		bulletBody->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
-		bulletBody->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
-
 		// Prepares the Position transformation
 		btTransform newTransform;
 		newTransform.setIdentity();
-		newTransform.setOrigin(btVector3(position.x, position.y, position.z));		
-		// Set the new transformation for the rigid body
-		bulletBody->setWorldTransform(newTransform);
+		newTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
-		// Restore the rigid body's dynamics properties
-		bulletBody->setCollisionFlags(bulletBody->getCollisionFlags() & ~btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT);
-		bulletBody->setActivationState(ACTIVE_TAG);
-		bulletBody->setLinearVelocity(btVector3(0, 0, 0));
-		bulletBody->setAngularVelocity(btVector3(0, 0, 0));
+		bulletBody->setWorldTransform(newTransform);
+		bulletBody->getMotionState()->setWorldTransform(newTransform);
+
+		// Kill all forces
+		bulletBody->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+		bulletBody->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+		bulletBody->clearForces();
+
+		// Activate the Body after the transformation
+		bulletBody->activate();
 
 	}
 }
